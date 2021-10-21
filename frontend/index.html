@@ -11,6 +11,14 @@
         <div class="container" ng-controller="Ctrl as ctrl">
             <h1>pai2021</h1>
 
+            <table class="table table-stripped">
+                <tr ng-repeat="person in ctrl.persons">
+                    <td ng-bind="person.firstName"></td>
+                    <td ng-bind="person.lastName"></td>
+                    <td ng-bind="person.rokur"></td>
+                </tr>
+            </table>
+
             <form class="form form-inline">
                 <input type="text" placeholder="Imię" class="form-control" ng-model="ctrl.person.firstName"/>
                 <input type="text" placeholder="Nazwisko" class="form-control" ng-model="ctrl.person.lastName"/>
