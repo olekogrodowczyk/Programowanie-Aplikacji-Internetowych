@@ -1,15 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="pai2021">
     <head>
         <meta charset="utf-8"/>
         <title>pai2021</title>
         <link rel="stylesheet" href="node_modules/bootstrap3/dist/css/bootstrap.min.css">
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
         <script src="node_modules/bootstrap3/dist/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <div class="container">
+        <div class="container" ng-controller="Ctrl as ctrl">
             <h1>pai2021</h1>
-            <img src="img1.png"/>
+
+            <form class="form form-inline">
+                <input type="text" placeholder="Imię" class="form-control" ng-model="ctrl.person.firstName"/>
+                <input type="text" placeholder="Nazwisko" class="form-control" ng-model="ctrl.person.lastName"/>
+                <input type="number" placeholder="Rok urodzenia" class="form-control" ng-model="ctrl.person.rokur"/>
+                <button class="btn btn-primary" ng-click="ctrl.sendData()" ng-disabled="ctrl.person.firstName == '' || ctrl.person.lastName == ''">
+                    Wyślij
+                </button>
+                </form>
         </div>
+        <script src="node_modules/angular/angular.min.js"></script>
+        <script src="js/pai2021.js"></script>
     </body>
 </html>
