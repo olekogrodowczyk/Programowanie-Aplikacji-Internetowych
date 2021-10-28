@@ -13,6 +13,7 @@ app.controller('Ctrl', [ '$http', function($http) {
     }
 
     ctrl.sendData = function() {
+        delete ctrl.person._id
         console.log('Sending ' + JSON.stringify(ctrl.person))
         $http.post('/person', ctrl.person).then(
             function(res) {
@@ -24,8 +25,16 @@ app.controller('Ctrl', [ '$http', function($http) {
         )
     }
 
-    ctrl.id = function(_id) {
+    ctrl.delete = function(_id) {
         $http.delete('/person?_id=' + _id).then(
+            function(res) { ctrl.persons = res.data },
+            function(err) {}
+        )
+    }
+
+    ctrl.put = function(_id) {
+        ctrl.person._id = _id
+        $http.put('/person', ctrl.person).then(
             function(res) { ctrl.persons = res.data },
             function(err) {}
         )

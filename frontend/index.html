@@ -4,6 +4,7 @@
         <meta charset="utf-8"/>
         <title>pai2021</title>
         <link rel="stylesheet" href="node_modules/bootstrap3/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
         <script src="node_modules/jquery/dist/jquery.min.js"></script>
         <script src="node_modules/bootstrap3/dist/js/bootstrap.min.js"></script>
     </head>
@@ -12,10 +13,14 @@
             <h1>pai2021</h1>
 
             <table class="table table-stripped">
-                <tr ng-repeat="person in ctrl.persons" ng-click="ctrl.id(person._id)">
+                <tr ng-repeat="person in ctrl.persons">
                     <td ng-bind="person.firstName"></td>
                     <td ng-bind="person.lastName"></td>
                     <td ng-bind="person.year"></td>
+                    <td>
+                        <button class="btn btn-danger fa fa-trash" ng-click="ctrl.delete(person._id)"></button>
+                        <button class="btn btn-warning fa fa-edit" ng-click="ctrl.put(person._id)" ng-disabled="ctrl.person.firstName == '' || ctrl.person.lastName == ''"></button>
+                    </td>
                 </tr>
             </table>
 
@@ -23,8 +28,7 @@
                 <input type="text" placeholder="Imię" class="form-control" ng-model="ctrl.person.firstName"/>
                 <input type="text" placeholder="Nazwisko" class="form-control" ng-model="ctrl.person.lastName"/>
                 <input type="number" placeholder="Rok urodzenia" class="form-control" ng-model="ctrl.person.year"/>
-                <button class="btn btn-primary" ng-click="ctrl.sendData()" ng-disabled="ctrl.person.firstName == '' || ctrl.person.lastName == ''">
-                    Wyślij
+                <button class="btn btn-primary fa fa-plus" ng-click="ctrl.sendData()" ng-disabled="ctrl.person.firstName == '' || ctrl.person.lastName == ''">
                 </button>
                 </form>
         </div>
