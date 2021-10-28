@@ -19,6 +19,13 @@ const person = module.exports = {
                 person.data = person.data.filter(function(obj) { return obj._id != env.urlParsed.query._id })
                 lib.sendJson(env.res, person.data)
                 break
+            case 'PUT':
+                let n = person.data.findIndex(function(obj) { return obj._id == env.payload._id })
+                if(n >= 0) {
+                    person.data[n] = env.payload
+                }
+                lib.sendJson(env.res, person.data)
+                break
             default:
                 lib.sendError(env.res, 405, 'method not implemented')
         }
