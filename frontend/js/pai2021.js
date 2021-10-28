@@ -9,12 +9,12 @@ app.controller('Ctrl', [ '$http', function($http) {
     ctrl.person = {
         firstName: '',
         lastName: '',
-        rokur: 2000
+        year: 2000
     }
 
     ctrl.sendData = function() {
         console.log('Sending ' + JSON.stringify(ctrl.person))
-        $http.post('/rest', ctrl.person).then(
+        $http.post('/person', ctrl.person).then(
             function(res) {
                 ctrl.persons = res.data
             },
@@ -24,7 +24,14 @@ app.controller('Ctrl', [ '$http', function($http) {
         )
     }
 
-    $http.get('/rest').then(
+    ctrl.id = function(_id) {
+        $http.delete('/person?_id=' + _id).then(
+            function(res) { ctrl.persons = res.data },
+            function(err) {}
+        )
+    }
+
+    $http.get('/person').then(
         function(res) { ctrl.persons = res.data },
         function(err) {}
     )

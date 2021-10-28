@@ -12,17 +12,17 @@
             <h1>pai2021</h1>
 
             <table class="table table-stripped">
-                <tr ng-repeat="person in ctrl.persons">
+                <tr ng-repeat="person in ctrl.persons" ng-click="ctrl.id(person._id)">
                     <td ng-bind="person.firstName"></td>
                     <td ng-bind="person.lastName"></td>
-                    <td ng-bind="person.rokur"></td>
+                    <td ng-bind="person.year"></td>
                 </tr>
             </table>
 
             <form class="form form-inline">
                 <input type="text" placeholder="Imię" class="form-control" ng-model="ctrl.person.firstName"/>
                 <input type="text" placeholder="Nazwisko" class="form-control" ng-model="ctrl.person.lastName"/>
-                <input type="number" placeholder="Rok urodzenia" class="form-control" ng-model="ctrl.person.rokur"/>
+                <input type="number" placeholder="Rok urodzenia" class="form-control" ng-model="ctrl.person.year"/>
                 <button class="btn btn-primary" ng-click="ctrl.sendData()" ng-disabled="ctrl.person.firstName == '' || ctrl.person.lastName == ''">
                     Wyślij
                 </button>

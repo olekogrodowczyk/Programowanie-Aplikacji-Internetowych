@@ -1,41 +1,36 @@
 const http = require('http')
+const url = require('url')
 const nodestatic = require('node-static')
+
+const lib = require('./lib')
+const person = require('./person')
 
 let server = http.createServer()
 let fileServer = new nodestatic.Server('./frontend');
 
-let persons = []
-
 server.on('request', function(req, res) {
-    console.log(req.method, req.url)
-    if(req.url == '/rest') {
-        let payload = ''
-        req.on('data', function(data) {
-            payload += data
-        }).on('end', function() {
-            switch(req.method) {
-                case 'GET':
-                    res.writeHead(200, 'OK', { 'Content-type': 'application/json' })
-                    res.write(JSON.stringify(persons))
-                    res.end()    
-                    break
-                case 'POST':
-                    try {
-                        payload = JSON.parse(payload)
-                        persons.push(payload)
-                        res.writeHead(200, 'OK', { 'Content-type': 'application/json' })
-                        res.write(JSON.stringify(persons))
-                        res.end()    
-                    } catch(ex) {
-                        res.writeHead(400, 'JSON parse error', { 'Content-type': 'application/json' })
-                        res.write(JSON.stringify({ status: ex.message }))
-                        res.end()        
-                    }
-                    break
-            }
-        })
-    } else
-        fileServer.serve(req, res)
+    let env = { req, res }
+    env.urlParsed = url.parse(req.url, true)
+    env.payload = ''
+    req.on('data', function(data) {
+        env.payload += data
+    }).on('end', function() {
+        try {
+            env.payload = env.payload ? JSON.parse(env.payload) : {}
+        }  catch(ex) {
+            console.log(req.method, env.urlParsed.pathname, env.urlParsed.query, 'ERROR PARSING:', env.payload)
+            lib.sendError(res, 400, 'parsing payload failed')
+            return
+        }
+        console.log(req.method, env.urlParsed.pathname, env.urlParsed.query, env.payload)
+        switch(env.urlParsed.pathname) {
+            case '/person': 
+                person.handle(env)
+                break
+            default:
+                fileServer.serve(req, res)
+        }
+    })
 })
 
 server.listen(7777)
