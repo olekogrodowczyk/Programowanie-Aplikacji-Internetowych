@@ -7,6 +7,7 @@ const lib = module.exports = {
     },
 
     sendError: function(res, code, cause = '') {
+        console.error(code, cause)
         res.writeHead(code, { 'Content-type': 'application/json' })
         res.write(JSON.stringify({ cause }))
         res.end()    

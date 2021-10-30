@@ -11,6 +11,7 @@ let fileServer = new nodestatic.Server('./frontend');
 server.on('request', function(req, res) {
     let env = { req, res }
     env.urlParsed = url.parse(req.url, true)
+    if(!env.urlParsed.query) env.urlParsed.query = {}
     env.payload = ''
     req.on('data', function(data) {
         env.payload += data
@@ -18,7 +19,7 @@ server.on('request', function(req, res) {
         try {
             env.payload = env.payload ? JSON.parse(env.payload) : {}
         }  catch(ex) {
-            console.log(req.method, env.urlParsed.pathname, env.urlParsed.query, 'ERROR PARSING:', env.payload)
+            console.error(req.method, env.urlParsed.pathname, env.urlParsed.query, 'ERROR PARSING:', env.payload)
             lib.sendError(res, 400, 'parsing payload failed')
             return
         }
