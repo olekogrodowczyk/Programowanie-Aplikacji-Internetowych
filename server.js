@@ -19,11 +19,11 @@ server.on('request', function(req, res) {
         try {
             env.payload = env.payload ? JSON.parse(env.payload) : {}
         }  catch(ex) {
-            console.error(req.method, env.urlParsed.pathname, env.urlParsed.query, 'ERROR PARSING:', env.payload)
+            console.error(req.method, env.urlParsed.pathname, JSON.stringify(env.urlParsed.query), 'ERROR PARSING:', env.payload)
             lib.sendError(res, 400, 'parsing payload failed')
             return
         }
-        console.log(req.method, env.urlParsed.pathname, env.urlParsed.query, env.payload)
+        console.log(req.method, env.urlParsed.pathname, JSON.stringify(env.urlParsed.query), JSON.stringify(env.payload))
         switch(env.urlParsed.pathname) {
             case '/person': 
                 person.handle(env)

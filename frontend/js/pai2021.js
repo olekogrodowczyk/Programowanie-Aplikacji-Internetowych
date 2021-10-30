@@ -71,7 +71,6 @@ app.controller('ContainerCtrl', [ '$http', 'common', function($http, common) {
     ctrl.person = {}
     
     const personDefaults = {
-        _id: null,
         firstName: '',
         lastName: '',
         year: 2000
@@ -98,6 +97,7 @@ app.controller('ContainerCtrl', [ '$http', 'common', function($http, common) {
                             function(err) {}
                         )
                     } else {
+                        delete ctrl.person._id
                         $http.post('/person', ctrl.person).then(
                             function(res) { 
                                 ctrl.persons = res.data
