@@ -7,9 +7,9 @@ app.service('common', [ '$uibModal', function($uibModal) {
         text: '',
         type: 'alert-success',
         show: function(text, type = 'alert-success') {
-            common.alert.type = type;
-            common.alert.text = text;
-            console.log(type, ':', text);
+            common.alert.type = type
+            common.alert.text = text
+            console.log(type, ':', text)
         },
         close: function() { common.alert.text = '' }
     }

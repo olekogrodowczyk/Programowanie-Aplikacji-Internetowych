@@ -4,6 +4,7 @@ const nodestatic = require('node-static')
 
 const lib = require('./lib')
 const person = require('./person')
+const db = require('./db')
 
 let server = http.createServer()
 let fileServer = new nodestatic.Server('./frontend');
@@ -34,4 +35,6 @@ server.on('request', function(req, res) {
     })
 })
 
-server.listen(7777)
+db.init(function() {
+    server.listen(7777)
+})

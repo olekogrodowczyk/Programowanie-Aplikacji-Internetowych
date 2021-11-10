@@ -1,30 +1,63 @@
-const uuid = require('uuid')
+const db = require('./db')
 const lib = require('./lib')
 
 const person = module.exports = {
 
-    data: [],
-
     handle: function(env) {
+
+        let _id
+
+        const sendAllPersons = function() {
+            db.persons.find().toArray(function(err, persons) {
+                if(!err) {
+                    lib.sendJson(env.res, persons)
+                } else {
+                    lib.sendError(env.res, 400, 'persons.find() failed')
+                }
+            })              
+        }
+
         switch(env.req.method) {
             case 'GET':
-                lib.sendJson(env.res, person.data)
+                sendAllPersons()
                 break
             case 'POST':
-                env.payload._id = uuid.v4()
-                person.data.push(env.payload)
-                lib.sendJson(env.res, person.data)
+                db.persons.insertOne(env.payload, function(err, result) {
+                    if(!err) {
+                        sendAllPersons()
+                    } else {
+                        lib.sendError(env.res, 400, 'persons.insertOne() failed')
+                    }
+                })
                 break
             case 'DELETE':
-                person.data = person.data.filter(function(obj) { return obj._id != env.urlParsed.query._id })
-                lib.sendJson(env.res, person.data)
+                _id = db.ObjectId(env.urlParsed.query._id)
+                if(_id) {
+                    db.persons.findOneAndDelete({ _id }, function(err, result) {
+                        if(!err) {
+                            sendAllPersons()
+                        } else {
+                            lib.sendError(env.res, 400, 'persons.findOneAndDelete() failed')
+                        }
+                    })
+                } else {
+                    lib.sendError(env.res, 400, 'Broken _id for delete ' + env.urlParsed.query._id)
+                }
                 break
             case 'PUT':
-                let n = person.data.findIndex(function(obj) { return obj._id == env.payload._id })
-                if(n >= 0) {
-                    person.data[n] = env.payload
+                _id = db.ObjectId(env.payload._id)
+                if(_id) {
+                    delete env.payload._id
+                    db.persons.findOneAndUpdate({ _id }, { $set: env.payload }, { returnOriginal: false }, function(err, result) {
+                        if(!err) {
+                            sendAllPersons()
+                        } else {
+                            lib.sendError(env.res, 400, 'persons.findOneAndUpdate() failed')
+                        }
+                    })
+                } else {
+                    lib.sendError(env.res, 400, 'Broken _id for update ' + env.urlParsed.query._id)
                 }
-                lib.sendJson(env.res, person.data)
                 break
             default:
                 lib.sendError(env.res, 405, 'method not implemented')
