@@ -19,8 +19,8 @@ const person = module.exports = {
 
         const sendAllPersons = function(q = '') {
             db.persons.find({ $or: [
-                                     { firstName: { $regex: q } },
-                                     { lastName: { $regex: q } }
+                                     { firstName: { $regex: new RegExp(q, 'i') } },
+                                     { lastName: { $regex: new RegExp(q, 'i') } }
                                    ]}).skip(skip).limit(limit).toArray(function(err, persons) {
                 if(!err) {
                     lib.sendJson(env.res, persons)
