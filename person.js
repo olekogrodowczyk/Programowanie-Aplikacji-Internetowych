@@ -5,10 +5,23 @@ const person = module.exports = {
 
     handle: function(env) {
 
-        let _id
+        const validate = function(person) {
+            let result = { firstName: person.firstName, lastName: person.lastName, year: person.year }
+            return result.firstName && result.lastName && !isNaN(result.year) ? result : null
+        }
 
-        const sendAllPersons = function() {
-            db.persons.find().toArray(function(err, persons) {
+        let _id, person
+        let q = env.urlParsed.query.q ? env.urlParsed.query.q : ''
+        let skip = env.urlParsed.query.skip ? parseInt(env.urlParsed.query.skip) : 0
+        skip = isNaN(skip) || skip < 0 ? 0 : skip
+        let limit = env.urlParsed.query.limit ? parseInt(env.urlParsed.query.limit) : 0
+        limit = isNaN(limit) || limit <= 0 ? 999999 : limit
+
+        const sendAllPersons = function(q = '') {
+            db.persons.find({ $or: [
+                                     { firstName: { $regex: q } },
+                                     { lastName: { $regex: q } }
+                                   ]}).skip(skip).limit(limit).toArray(function(err, persons) {
                 if(!err) {
                     lib.sendJson(env.res, persons)
                 } else {
@@ -17,14 +30,22 @@ const person = module.exports = {
             })              
         }
 
+        if(env.req.method == 'POST' || env.req.method == 'PUT') {
+            person = validate(env.payload)
+            if(!person) {
+                lib.sendError(env.res, 400, 'invalid payload')
+                return
+            }
+        }
+
         switch(env.req.method) {
             case 'GET':
-                sendAllPersons()
+                sendAllPersons(q)
                 break
             case 'POST':
-                db.persons.insertOne(env.payload, function(err, result) {
+                db.persons.insertOne(person, function(err, result) {
                     if(!err) {
-                        sendAllPersons()
+                        sendAllPersons(q)
                     } else {
                         lib.sendError(env.res, 400, 'persons.insertOne() failed')
                     }
@@ -35,28 +56,27 @@ const person = module.exports = {
                 if(_id) {
                     db.persons.findOneAndDelete({ _id }, function(err, result) {
                         if(!err) {
-                            sendAllPersons()
+                            sendAllPersons(q)
                         } else {
                             lib.sendError(env.res, 400, 'persons.findOneAndDelete() failed')
                         }
                     })
                 } else {
-                    lib.sendError(env.res, 400, 'Broken _id for delete ' + env.urlParsed.query._id)
+                    lib.sendError(env.res, 400, 'broken _id for delete ' + env.urlParsed.query._id)
                 }
                 break
             case 'PUT':
                 _id = db.ObjectId(env.payload._id)
                 if(_id) {
-                    delete env.payload._id
-                    db.persons.findOneAndUpdate({ _id }, { $set: env.payload }, { returnOriginal: false }, function(err, result) {
+                    db.persons.findOneAndUpdate({ _id }, { $set: person }, { returnOriginal: false }, function(err, result) {
                         if(!err) {
-                            sendAllPersons()
+                            sendAllPersons(q)
                         } else {
                             lib.sendError(env.res, 400, 'persons.findOneAndUpdate() failed')
                         }
                     })
                 } else {
-                    lib.sendError(env.res, 400, 'Broken _id for update ' + env.urlParsed.query._id)
+                    lib.sendError(env.res, 400, 'broken _id for update ' + env.urlParsed.query._id)
                 }
                 break
             default:

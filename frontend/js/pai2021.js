@@ -69,6 +69,8 @@ app.controller('ContainerCtrl', [ '$http', 'common', function($http, common) {
 
     ctrl.persons = []
     ctrl.person = {}
+    ctrl.q = ''
+    ctrl.skip = ctrl.limit = 0
     
     const personDefaults = {
         firstName: '',
@@ -130,9 +132,13 @@ app.controller('ContainerCtrl', [ '$http', 'common', function($http, common) {
         })
     }
 
-    $http.get('/person').then(
-        function(res) { ctrl.persons = res.data },
-        function(err) {}
-    )
+    ctrl.refreshData = function() {
+        $http.get('/person?q=' + ctrl.q + '&limit=' + ctrl.limit + '&skip=' + ctrl.skip).then(
+            function(res) { ctrl.persons = res.data },
+            function(err) {}
+        )    
+    }
+
+    ctrl.refreshData()
 
 }])
