@@ -27,6 +27,7 @@ const example = module.exports = {
     initializePersons: function() {
         db.persons.count(function(err, n) {
             if(n == 0) {
+                console.log('No persons, example data will be used')
                 example.persons.forEach(function(person) {
                     db.persons.insertOne(person, function(err, result) {})    
                     console.log('db.persons.insertOne(' + JSON.stringify(person) + ')')
