@@ -13,7 +13,7 @@ const db = module.exports = {
     },
 
     init: function(nextTick) {
-        mongodb.MongoClient.connect('mongodb://localhost', { useUnifiedTopology: true }, function(err, connection) {
+        mongodb.MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, function(err, connection) {
             if(err) {
                 console.error('Connection to database failed')
                 process.exit(0)

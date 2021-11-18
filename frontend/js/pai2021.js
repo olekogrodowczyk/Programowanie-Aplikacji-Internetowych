@@ -1,5 +1,21 @@
-let app = angular.module('pai2021', ['ngSanitize', 'ngAnimate', 'ui.bootstrap'])
+let app = angular.module('pai2021', ['ngRoute', 'ngSanitize', 'ngAnimate', 'ui.bootstrap'])
 
+// router menu
+app.constant('routes', [
+	{ route: '/', templateUrl: 'homeView.html', controller: 'HomeCtrl', controllerAs: 'ctrl', menu: '<i class="fa fa-lg fa-home"></i>' },
+	{ route: '/persons', templateUrl: 'personsView.html', controller: 'PersonsCtrl', controllerAs: 'ctrl', menu: 'Osoby' }
+])
+
+// instalacja routera
+app.config(['$routeProvider', '$locationProvider', 'routes', function($routeProvider, $locationProvider, routes) {
+    $locationProvider.hashPrefix('')
+	for(var i in routes) {
+		$routeProvider.when(routes[i].route, routes[i])
+	}
+	$routeProvider.otherwise({ redirectTo: '/' })
+}])
+
+// usługi wspólne
 app.service('common', [ '$uibModal', function($uibModal) {
     let common = this
 
@@ -53,92 +69,30 @@ app.controller('ConfirmDialog', [ '$uibModalInstance', 'options', function($uibM
     ctrl.cancel = function() { $uibModalInstance.dismiss('cancel') }
 }])
 
-// editPerson controller
-app.controller('EditPersonCtrl', [ '$uibModalInstance', 'options', function($uibModalInstance, options) {
-    let ctrl = this
-    ctrl.options = options
-
-    ctrl.submit = function(answer) { $uibModalInstance.close(answer) }
-    ctrl.cancel = function() { $uibModalInstance.dismiss(null) }
-
-}])
-
-app.controller('ContainerCtrl', [ '$http', 'common', function($http, common) {
+app.controller('ContainerCtrl', [ '$http', '$location', '$scope', 'common', 'routes', function($http, $location, $scope, common, routes) {
     let ctrl = this
     ctrl.alert = common.alert
 
-    ctrl.persons = []
-    ctrl.person = {}
-    ctrl.q = ''
-    ctrl.skip = ctrl.limit = 0
-    
-    const personDefaults = {
-        firstName: '',
-        lastName: '',
-        year: 2000
-    }
+    // budowanie menu
+    ctrl.menu = []
 
-    ctrl.edit = function(index) {
-        Object.assign(ctrl.person, index >= 0 ? ctrl.persons[index] : personDefaults)
-        let options = { 
-            title: index >= 0 ? 'Edytuj dane' : 'Nowe dane ',
-            ok: true,
-            delete: index >= 0,
-            cancel: true,
-            data: ctrl.person
+    let rebuildMenu = function() {
+        for(var i in routes) {
+            ctrl.menu.push({ route: routes[i].route, title: routes[i].menu })
         }
-        common.dialog('editPerson.html', 'EditPersonCtrl', options, function(answer) {
-            switch(answer) {
-                case 'ok':
-                    if(index >= 0) {
-                        $http.put('/person', ctrl.person).then(
-                            function(res) { 
-                                ctrl.persons = res.data
-                                common.alert.show('Dane zmienione')
-                            },
-                            function(err) {}
-                        )
-                    } else {
-                        delete ctrl.person._id
-                        $http.post('/person', ctrl.person).then(
-                            function(res) { 
-                                ctrl.persons = res.data
-                                common.alert.show('Dane dodane')
-                            },
-                            function(err) {}
-                        )
-                    }
-                    break
-                case 'delete':
-                    let options = {
-                        title: 'Usunąć obiekt?',
-                        body: ctrl.persons[index].firstName + ' ' + ctrl.persons[index].lastName,
-                        ok: true,
-                        cancel: true
-                    }
-                    common.confirm(options, function(answer) {
-                        if(answer == 'ok') {
-                            $http.delete('/person?_id=' + ctrl.persons[index]._id).then(
-                                function(res) { 
-                                    ctrl.persons = res.data 
-                                    common.alert.show('Dane usunięte')
-                                },
-                                function(err) {}
-                            )
-                        }
-                    })
-                    break
-            }
-        })
+        $location.path('/')
     }
 
-    ctrl.refreshData = function() {
-        $http.get('/person?q=' + ctrl.q + '&limit=' + ctrl.limit + '&skip=' + ctrl.skip).then(
-            function(res) { ctrl.persons = res.data },
-            function(err) {}
-        )    
-    }
+    // kontrola nad menu zwiniętym i rozwiniętym
+    ctrl.isCollapsed = true
+    $scope.$on('$routeChangeSuccess', function () {
+        ctrl.isCollapsed = true
+    })
+    
+    // sprawdzenie która pozycja menu jest wybrana
+    ctrl.navClass = function(page) {
+        return page === $location.path() ? 'active' : ''
+    }    
 
-    ctrl.refreshData()
-
+    rebuildMenu()
 }])
