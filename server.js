@@ -6,6 +6,7 @@ const lib = require('./lib')
 const person = require('./person')
 const db = require('./db')
 const example = require('./example')
+const deposit = require('./deposit')
 
 let server = http.createServer()
 let fileServer = new nodestatic.Server('./frontend');
@@ -29,6 +30,9 @@ server.on('request', function(req, res) {
         switch(env.urlParsed.pathname) {
             case '/person': 
                 person.handle(env)
+                break
+            case '/deposit':
+                deposit.handle(env)
                 break
             default:
                 fileServer.serve(req, res)

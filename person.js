@@ -18,11 +18,48 @@ const person = module.exports = {
         limit = isNaN(limit) || limit <= 0 ? 999999 : limit
 
         const sendAllPersons = function(q = '') {
-            db.persons.find({ $or: [
+            db.persons.
+            aggregate([{
+                $match: {
+                    $or: [{
+                            firstName: {
+                                $regex: RegExp(q, "i")
+                            }
+                        },
+                        {
+                            lastName: {
+                                $regex: RegExp(q, "i")
+                            }
+                        }
+                    ]
+                }
+            }, {
+                $skip: skip
+            }, {
+                $limit: limit
+            }, {
+                $lookup: {
+                    from: 'transactions',
+                    localField: '_id',
+                    foreignField: 'recipient',
+                    as: 'transactions'
+                }
+            }])
+            /* find({ $or: [
                                      { firstName: { $regex: new RegExp(q, 'i') } },
                                      { lastName: { $regex: new RegExp(q, 'i') } }
-                                   ]}).skip(skip).limit(limit).toArray(function(err, persons) {
+                                   ]}).skip(skip).limit(limit)
+            */                       
+                .toArray(function(err, persons) {
                 if(!err) {
+                    persons.forEach(function(obj) {
+                        obj.number_of_transactions = obj.transactions.length
+                        obj.balance = 0
+                        obj.transactions.forEach(function(tr) {
+                            obj.balance += tr.amount
+                        })
+                        delete obj.transactions
+                    })
                     lib.sendJson(env.res, persons)
                 } else {
                     lib.sendError(env.res, 400, 'persons.find() failed')
@@ -40,7 +77,14 @@ const person = module.exports = {
 
         switch(env.req.method) {
             case 'GET':
-                sendAllPersons(q)
+                _id = db.ObjectId(env.urlParsed.query._id)
+                if(_id) {
+                    db.persons.findOne({ _id }, function(err, result) {
+                        lib.sendJson(env.res, result)
+                    })
+                } else {
+                    sendAllPersons(q)
+                }
                 break
             case 'POST':
                 db.persons.insertOne(person, function(err, result) {

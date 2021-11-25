@@ -3,10 +3,11 @@ const mongodb = require('mongodb')
 const db = module.exports = {
 
     persons: null,
+    transactions: null,
 
     ObjectId: function(_idStr) {
         try {
-            return mongodb.ObjectId(_idStr)
+            return _idStr ? mongodb.ObjectId(_idStr) : null
         } catch(ex) {
             return null
         }
@@ -20,6 +21,7 @@ const db = module.exports = {
             }
             let conn = connection.db('pai2021')
             db.persons = conn.collection('persons')
+            db.transactions = conn.collection('transactions')
             nextTick()
         })
     }

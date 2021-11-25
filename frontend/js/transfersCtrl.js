@@ -1,4 +1,4 @@
-app.controller('TransfersCtrl', [ 'common', function(common) {
+app.controller('TransfersCtrl', [ '$http', 'common', function($http, common) {
     let ctrl = this
     
     ctrl.transfer = { amount: 0, recipient: null }
@@ -11,7 +11,21 @@ app.controller('TransfersCtrl', [ 'common', function(common) {
             data: ctrl.transfer
         }
         common.dialog('makeTransfer.html', 'MakeTransferCtrl', options, function(answer) {
-            common.alert.show('Teraz wpłać ' + ctrl.transfer.amount + ' PLN dla ' + ctrl.transfer.recipient)
+            if(answer == 'ok') {
+                $http.post('/deposit', ctrl.transfer).then(
+                    function(res) {
+                        $http.get('/person?_id=' + ctrl.transfer.recipient).then(
+                            function(res) {
+                                common.alert.show('Wpłaciłeś ' + ctrl.transfer.amount + ' PLN dla ' + res.data.firstName + ' ' + res.data.lastName)
+                            },
+                            function(err) {}
+                        )
+                    },
+                    function(err) {
+                        common.alert.show('Wpłata nieudana', 'alert-danger')
+                    }
+                )
+            }
         })
     }
 
