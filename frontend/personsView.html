@@ -16,11 +16,15 @@
         <th>Imię</th>
         <th>Nazwisko</th>
         <th>Rok urodzenia</th>
+        <th>Transakcji</th>
+        <th>Stan konta</th>
     </tr>
     <tr ng-repeat="person in ctrl.persons" ng-click="ctrl.edit($index)">
         <td></td>
         <td ng-bind="person.firstName"></td>
         <td ng-bind="person.lastName"></td>
         <td ng-bind="person.year"></td>
+        <td style="text-align: right" ng-bind="person.transactions"></td>
+        <td style="text-align: right" ng-bind="person.balance"></td>
     </tr>
 </table>

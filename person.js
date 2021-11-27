@@ -19,50 +19,17 @@ const person = module.exports = {
 
         const sendAllPersons = function(q = '') {
             db.persons.
-            aggregate([{
-                $match: {
-                    $or: [{
-                            firstName: {
-                                $regex: RegExp(q, "i")
-                            }
-                        },
-                        {
-                            lastName: {
-                                $regex: RegExp(q, "i")
-                            }
-                        }
-                    ]
-                }
-            }, {
-                $skip: skip
-            }, {
-                $limit: limit
-            }, {
-                $lookup: {
-                    from: 'transactions',
-                    localField: '_id',
-                    foreignField: 'recipient',
-                    as: 'transactions'
-                }
-            }])
-            /* find({ $or: [
-                                     { firstName: { $regex: new RegExp(q, 'i') } },
-                                     { lastName: { $regex: new RegExp(q, 'i') } }
-                                   ]}).skip(skip).limit(limit)
-            */                       
-                .toArray(function(err, persons) {
+            aggregate([
+                { $match: { $or: [{ firstName: { $regex: RegExp(q, 'i') }}, { lastName: { $regex: RegExp(q, 'i') }}] }},
+                { $skip: skip },
+                { $limit: limit },
+                { $lookup: { from: 'transactions', localField: '_id', foreignField: 'recipient', as: 'transactions' }},
+                { $addFields: { balance: {$sum: '$transactions.amount'}, transactions: {$size: '$transactions'}}}
+            ]).toArray(function(err, persons) {
                 if(!err) {
-                    persons.forEach(function(obj) {
-                        obj.number_of_transactions = obj.transactions.length
-                        obj.balance = 0
-                        obj.transactions.forEach(function(tr) {
-                            obj.balance += tr.amount
-                        })
-                        delete obj.transactions
-                    })
                     lib.sendJson(env.res, persons)
                 } else {
-                    lib.sendError(env.res, 400, 'persons.find() failed')
+                    lib.sendError(env.res, 400, 'persons.aggregate() failed ' + err)
                 }
             })              
         }

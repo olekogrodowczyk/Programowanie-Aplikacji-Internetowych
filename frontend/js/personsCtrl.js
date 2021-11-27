@@ -14,6 +14,8 @@ app.controller('PersonsCtrl', [ '$http', 'common', function($http, common) {
 
     ctrl.edit = function(index) {
         Object.assign(ctrl.person, index >= 0 ? ctrl.persons[index] : personDefaults)
+        delete ctrl.person.balance
+        delete ctrl.person.transactions
         let options = { 
             title: index >= 0 ? 'Edytuj dane' : 'Nowe dane ',
             ok: true,
