@@ -7,6 +7,7 @@ const cookies = require('cookies')
 const lib = require('./lib')
 const person = require('./person')
 const db = require('./db')
+const auth = require('./auth')
 const example = require('./example')
 const deposit = require('./deposit')
 
@@ -44,6 +45,9 @@ server.on('request', function(req, res) {
         }
         console.log(session, req.method, env.urlParsed.pathname, JSON.stringify(env.urlParsed.query), JSON.stringify(env.payload))
         switch(env.urlParsed.pathname) {
+            case '/auth':
+                auth.handle(env)
+                break
             case '/person': 
                 person.handle(env)
                 break

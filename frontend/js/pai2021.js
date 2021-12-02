@@ -20,6 +20,8 @@ app.config(['$routeProvider', '$locationProvider', 'routes', function($routeProv
 app.service('common', [ '$uibModal', function($uibModal) {
     let common = this
 
+    common.login = null
+
     common.alert = {
         text: '',
         type: 'alert-success',
@@ -70,7 +72,7 @@ app.controller('ConfirmDialog', [ '$uibModalInstance', 'options', function($uibM
     ctrl.cancel = function() { $uibModalInstance.dismiss('cancel') }
 }])
 
-app.controller('ContainerCtrl', [ '$http', '$location', '$scope', 'common', 'routes', function($http, $location, $scope, common, routes) {
+app.controller('ContainerCtrl', [ '$http', '$location', '$scope', '$uibModal', 'common', 'routes', function($http, $location, $scope, $uibModal, common, routes) {
     let ctrl = this
     ctrl.alert = common.alert
 
@@ -78,6 +80,7 @@ app.controller('ContainerCtrl', [ '$http', '$location', '$scope', 'common', 'rou
     ctrl.menu = []
 
     let rebuildMenu = function() {
+        ctrl.menu.length = 0
         for(var i in routes) {
             ctrl.menu.push({ route: routes[i].route, title: routes[i].menu })
         }
@@ -95,5 +98,57 @@ app.controller('ContainerCtrl', [ '$http', '$location', '$scope', 'common', 'rou
         return page === $location.path() ? 'active' : ''
     }    
 
-    rebuildMenu()
+    // ikona login/logout
+    ctrl.loginIcon = function() {
+        return common.login ? common.login + '&nbsp;<span class="fa fa-lg fa-sign-out"></span>' : '<span class="fa fa-lg fa-sign-in"></span>'
+    }
+    
+    // logowanie/wylogowanie
+    ctrl.login = function() {
+        if(common.login) {
+            // log out
+            common.confirm({ title: 'Uwaga!', body: 'Czy na pewno chcesz się wylogować?', ok: true, cancel: true }, function(answer) {
+                if(answer) {
+                    $http.delete('/auth').then(
+                        function(rep) {
+                            common.login = null
+                            rebuildMenu()
+                        },
+                        function(err) {}
+                    )
+                }
+            })    
+        } else {
+            // log in
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title-top',
+                ariaDescribedBy: 'modal-body-top',
+                templateUrl: 'loginDialog.html',
+                controller: 'LoginCtrl',
+                controllerAs: 'ctrl',
+            });
+    
+            modalInstance.result.then(
+                function(ret) { 
+                    if(ret) {
+                        rebuildMenu()
+                        common.alert.show('Witaj na pokładzie, ' + ret, 'alert-success')
+                    } else {
+                        common.alert.show('Logowanie nieudane', 'alert-danger')
+                    }
+                },
+                function() {}
+            )
+        }
+    }
+    
+    // kim jestem
+    $http.get('/auth').then(
+        function(res) {
+            common.login = res.data.login
+            rebuildMenu()
+        },
+        function(err) { common.login = null }
+    )    
 }])

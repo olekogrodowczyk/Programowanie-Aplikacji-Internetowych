@@ -36,6 +36,10 @@
                             </li>
                         </ul>
 
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a ng-bind-html="ctrl.loginIcon()" ng-click="ctrl.login()"></a></li>
+                        </ul>
+    
                     </div>
                 </div>
             </nav>
@@ -55,6 +59,7 @@
         <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
 
         <script src="js/pai2021.js"></script>
+        <script src="js/loginCtrl.js"></script>
         <script src="js/homeCtrl.js"></script>
         <script src="js/personsCtrl.js"></script>
         <script src="js/editPerson.js"></script>
