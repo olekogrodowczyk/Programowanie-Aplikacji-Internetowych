@@ -3,8 +3,8 @@ let app = angular.module('pai2021', ['ngRoute', 'ngSanitize', 'ngAnimate', 'ui.b
 // router menu
 app.constant('routes', [
 	{ route: '/', templateUrl: 'homeView.html', controller: 'HomeCtrl', controllerAs: 'ctrl', menu: '<i class="fa fa-lg fa-home"></i>' },
-	{ route: '/persons', templateUrl: 'personsView.html', controller: 'PersonsCtrl', controllerAs: 'ctrl', menu: 'Osoby' },
-    { route: '/transfers', templateUrl: 'transfersView.html', controller: 'TransfersCtrl', controllerAs: 'ctrl', menu: 'Transfery' }
+	{ route: '/persons', templateUrl: 'personsView.html', controller: 'PersonsCtrl', controllerAs: 'ctrl', menu: 'Osoby', roles: [ "admin" ] },
+    { route: '/transfers', templateUrl: 'transfersView.html', controller: 'TransfersCtrl', controllerAs: 'ctrl', menu: 'Transfery', roles: [ "admin", "user" ] }
 ])
 
 // instalacja routera
@@ -20,7 +20,7 @@ app.config(['$routeProvider', '$locationProvider', 'routes', function($routeProv
 app.service('common', [ '$uibModal', function($uibModal) {
     let common = this
 
-    common.login = null
+    common.login = common.roles = null
 
     common.alert = {
         text: '',
@@ -81,10 +81,27 @@ app.controller('ContainerCtrl', [ '$http', '$location', '$scope', '$uibModal', '
 
     let rebuildMenu = function() {
         ctrl.menu.length = 0
-        for(var i in routes) {
-            ctrl.menu.push({ route: routes[i].route, title: routes[i].menu })
-        }
-        $location.path('/')
+        // kim jestem
+        $http.get('/auth').then(
+            function(res) {
+                common.login = res.data.login
+                common.roles = res.data.roles
+                for(let i in routes) {
+                    let intersection = []
+                    if(routes[i].roles && common.roles) {
+                        routes[i].roles.forEach(function(role) { if(common.roles.includes(role)) intersection.push(role) })
+                    }
+                    if(!routes[i].roles || intersection.length > 0) {
+                        ctrl.menu.push({ route: routes[i].route, title: routes[i].menu })
+                    }
+                }
+                $location.path('/')
+            },
+            function(err) { 
+                common.login = null
+                ctrl.menu.length = 0
+            }
+        )    
     }
 
     // kontrola nad menu zwiniętym i rozwiniętym
@@ -111,7 +128,6 @@ app.controller('ContainerCtrl', [ '$http', '$location', '$scope', '$uibModal', '
                 if(answer) {
                     $http.delete('/auth').then(
                         function(rep) {
-                            common.login = null
                             rebuildMenu()
                         },
                         function(err) {}
@@ -127,7 +143,7 @@ app.controller('ContainerCtrl', [ '$http', '$location', '$scope', '$uibModal', '
                 templateUrl: 'loginDialog.html',
                 controller: 'LoginCtrl',
                 controllerAs: 'ctrl',
-            });
+            })
     
             modalInstance.result.then(
                 function(ret) { 
@@ -143,12 +159,5 @@ app.controller('ContainerCtrl', [ '$http', '$location', '$scope', '$uibModal', '
         }
     }
     
-    // kim jestem
-    $http.get('/auth').then(
-        function(res) {
-            common.login = res.data.login
-            rebuildMenu()
-        },
-        function(err) { common.login = null }
-    )    
+    rebuildMenu()
 }])
