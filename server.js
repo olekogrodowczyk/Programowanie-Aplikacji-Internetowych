@@ -62,7 +62,7 @@ server.on('request', function(req, res) {
 
 db.init(function() {
     // for development only
-    example.initializePersons()
+    example.initialize()
     //
     server.listen(7777)
 })
