@@ -1,6 +1,8 @@
 app.controller('TransfersCtrl', [ '$http', 'common', function($http, common) {
     let ctrl = this
     
+    ctrl.checkPermissions = common.checkPermissions
+    
     ctrl.transfer = { amount: 0, recipient: null }
     
     ctrl.deposit = function() {

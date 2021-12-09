@@ -20,7 +20,8 @@ app.config(['$routeProvider', '$locationProvider', 'routes', function($routeProv
 app.service('common', [ '$uibModal', function($uibModal) {
     let common = this
 
-    common.login = common.roles = null
+    common.login = null
+    common.roles = []
 
     common.alert = {
         text: '',
@@ -61,6 +62,23 @@ app.service('common', [ '$uibModal', function($uibModal) {
         common.dialog('confirmDialog.html', 'ConfirmDialog', options, nextTick)
     }
 
+    // sprawdzenie uprawnien
+    let permissions = {
+        deposit: [ "admin" ]
+    }
+
+    common.checkPermissions = function(activity) {
+        
+        // jeśli ktoś nie pełni żadnej roli, zabroń
+        if(!common.roles || common.roles.length < 1) return false
+        // jeśli aktywność nie ma swoich ról dostępu, zezwól
+        if(!permissions[activity] || permissions[activity].length < 1) return true
+
+        let intersection = []
+        permissions[activity].forEach(function(role) { if(common.roles.includes(role)) intersection.push(role) })
+        return intersection.length > 0
+    }
+    
 }])
 
 // confirmation dialog controller

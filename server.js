@@ -32,6 +32,12 @@ server.on('request', function(req, res) {
 
     env.urlParsed = url.parse(req.url, true)
     if(!env.urlParsed.query) env.urlParsed.query = {}
+
+    if(!lib.checkPermissions(req.method + ' ' + env.urlParsed.pathname, lib.sessions[session].roles)) {
+        lib.sendError(res, 403, 'permission denied')
+        return
+    }
+
     env.payload = ''
     req.on('data', function(data) {
         env.payload += data

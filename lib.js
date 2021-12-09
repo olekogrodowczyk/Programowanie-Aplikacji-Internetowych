@@ -13,6 +13,37 @@ const lib = module.exports = {
         res.writeHead(code, { 'Content-type': 'application/json' })
         res.write(JSON.stringify({ cause }))
         res.end()    
-    }
+    },
 
+    // sprawdzenie uprawnien
+    permissions: {
+        '^GET /person$': [ "admin", "user" ],
+        ' /person$': [ "admin" ],
+        ' /persons.*\\.html$': [ "admin" ]
+    },
+
+    checkPermissions: function(reqStr, roles) {
+
+        console.log('\'' + reqStr + '\'')
+
+        let permittedRoles = []
+        for(let pattern in lib.permissions) {
+            let regexp = new RegExp(pattern)
+            if(regexp.test(reqStr)) {
+                permittedRoles = lib.permissions[pattern]
+                break
+            }
+        }
+
+        console.log('permittedRoles', permittedRoles)
+
+        // jeśli url ma pustą tablicę ról, jest niechroniony
+        if(permittedRoles.length < 1) return true
+        if(!roles || roles.length < 1) return false
+
+        let intersection = []
+        roles.forEach(function(role) { if(permittedRoles.includes(role)) intersection.push(role) })
+        return intersection.length > 0
+    }
+        
 }
