@@ -20,6 +20,16 @@ const lib = module.exports = {
         '^GET /person$': [ "admin", "user" ],
         ' /person$': [ "admin" ],
         ' /persons.*\\.html$': [ "admin" ]
+/*
+    // Bogatsza wersja:
+    permissions: [
+        { req: ' /.*View\.html$', roles: [], error: 'Access denied' },
+        { req: '^(POST|PUT|DELETE) ', roles: ['admin'], error: null },
+        { req: '^POST /transfer$', roles: ['user'], error: null },
+        { req: '^(POST|PUT|DELETE) ', roles: '*', error: 'You have to be logged as admin'  }
+    ]
+
+*/
     },
 
     checkPermissions: function(reqStr, roles) {
