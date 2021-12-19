@@ -3,7 +3,7 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">{{ title }}</p>
-      <button class="delete" aria-label="close"></button>
+      <button class="delete" aria-label="close" (click)="cancel()"></button>
     </header>
     <section class="modal-card-body"><ng-content></ng-content></section>
     <footer class="modal-card-foot">
