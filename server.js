@@ -83,7 +83,7 @@ server.on("request", function (req, res) {
           deposit.handle(env);
           break;
         default:
-          fileServer.serve(req, res);
+          console.log("Error in requests");
       }
     });
 });
