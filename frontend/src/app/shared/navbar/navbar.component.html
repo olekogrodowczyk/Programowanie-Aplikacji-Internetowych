@@ -56,6 +56,9 @@
   [title]="'Logowanie'"
   (onClose)="showModal = false"
 >
+  <ng-container>
+    <app-login-form></app-login-form>
+  </ng-container>
   <ng-container modalFooter>
     <button class="button is-primary">Zaloguj się</button>
   </ng-container>
