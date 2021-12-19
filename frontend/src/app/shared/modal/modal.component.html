@@ -5,11 +5,10 @@
       <p class="modal-card-title">{{ title }}</p>
       <button class="delete" aria-label="close"></button>
     </header>
-    <section class="modal-card-body">
-      <!-- Content ... -->
-    </section>
+    <section class="modal-card-body"><ng-content></ng-content></section>
     <footer class="modal-card-foot">
       <ng-content select="[modalFooter]"></ng-content>
+      <button (click)="cancel()" class="button is-danger">Anuluj</button>
     </footer>
   </div>
 </div>

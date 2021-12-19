@@ -40,11 +40,21 @@
       <div class="navbar-item">
         <div class="buttons">
           <a class="button is-primary">
-            <strong>Sign up</strong>
+            <strong>Zarejestrj się</strong>
           </a>
-          <a class="button is-light"> Log in </a>
+          <a (click)="selectItem()" class="button is-light"> Zaloguj się </a>
         </div>
       </div>
     </div>
   </div>
 </nav>
+
+<app-modal
+  *ngIf="showModal"
+  [title]="'Logowanie'"
+  (onClose)="showModal = false"
+>
+  <ng-container modalFooter>
+    <button class="button is-primary">Zaloguj się</button>
+  </ng-container>
+</app-modal>
