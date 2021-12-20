@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
 
 interface SigninCredentials {
-  username: string;
+  login: string;
   password: string;
 }
 
 interface SigninResponse {
-  username: string;
+  login: string;
 }
 
 @Injectable({
@@ -16,7 +16,7 @@ interface SigninResponse {
 })
 export class AuthService {
   username = '';
-  rootUrl = 'localhost:7777';
+  rootUrl = 'http://localhost:7777';
   signedin$ = new BehaviorSubject(false);
 
   constructor(private http: HttpClient) {}
@@ -27,7 +27,8 @@ export class AuthService {
       .pipe(
         tap((response) => {
           this.signedin$.next(true);
-          this.username = response.username;
+          console.log(response.login);
+          this.username = response.login;
         })
       );
   }
