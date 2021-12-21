@@ -26,7 +26,6 @@ export class LoginFormComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit() {
-    console.log('Hello');
     if (this.loginGroupForm.invalid) {
       return;
     }

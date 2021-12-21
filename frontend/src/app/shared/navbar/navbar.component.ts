@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginFormComponent } from 'src/app/auth/login-form/login-form.component';
+import { AuthService } from 'src/app/auth/auth.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -7,12 +9,15 @@ import { LoginFormComponent } from 'src/app/auth/login-form/login-form.component
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  showModal = false;
-  constructor() {}
+  showLoginModal = false;
+  signedIn$: BehaviorSubject<boolean>;
+  constructor(private authService: AuthService) {
+    this.signedIn$ = this.authService.signedin$;
+  }
 
   ngOnInit(): void {}
 
   selectItem() {
-    this.showModal = true;
+    this.showLoginModal = true;
   }
 }
