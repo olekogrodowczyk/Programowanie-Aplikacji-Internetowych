@@ -5,7 +5,8 @@ const auth = (module.exports = {
   handle: function (env) {
     switch (env.req.method) {
       case "GET":
-        lib.sendJson(env.res, lib.sessions[env.session]);
+        console.log(lib.sessions[env.session].isAuth);
+        lib.sendJson(env.res, lib.sessions[env.session].isAuth);
         break;
       case "POST":
         db.users.findOne(
@@ -14,6 +15,7 @@ const auth = (module.exports = {
             if (!err && doc) {
               lib.sessions[env.session].login = env.payload.login;
               lib.sessions[env.session].roles = doc.roles;
+              lib.sessions[env.session].isAuth = true;
               lib.sendJson(env.res, lib.sessions[env.session]);
             } else {
               lib.sendError(env.res, 401, "authorization failed");

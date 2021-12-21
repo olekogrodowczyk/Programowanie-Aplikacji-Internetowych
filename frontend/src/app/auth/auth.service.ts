@@ -33,7 +33,6 @@ export class AuthService {
       .pipe(
         tap((response) => {
           this.signedin$.next(true);
-          console.log(response.login);
           this.username = response.login;
         })
       );
@@ -43,6 +42,14 @@ export class AuthService {
     return this.http.post(`${this.rootUrl}/register`, credentials).pipe(
       tap(() => {
         this.signedin$.next(true);
+      })
+    );
+  }
+
+  checkAuth() {
+    return this.http.get(`${this.rootUrl}/auth`).pipe(
+      tap((response) => {
+        console.log(`Outcome of checkAuth() - ${response}`);
       })
     );
   }

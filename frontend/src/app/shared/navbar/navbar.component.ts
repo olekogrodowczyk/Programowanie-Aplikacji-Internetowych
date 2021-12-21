@@ -15,7 +15,9 @@ export class NavbarComponent implements OnInit {
     this.signedIn$ = this.authService.signedin$;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.signedIn$);
+  }
 
   selectItem() {
     this.showLoginModal = true;
