@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class NavbarComponent implements OnInit {
   showLoginModal = false;
+  showLoginNotification = true;
   signedIn$: BehaviorSubject<boolean>;
   constructor(private authService: AuthService) {
     this.signedIn$ = this.authService.signedin$;
