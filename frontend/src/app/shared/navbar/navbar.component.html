@@ -45,7 +45,7 @@
             </a>
           </ng-container>
           <ng-container *ngIf="signedIn$ | async">
-            <a class="button is-info">
+            <a routerLink="/signout" class="button is-info">
               <strong>Wyloguj się</strong>
             </a>
           </ng-container>
@@ -69,3 +69,4 @@
     </button>
   </ng-container>
 </app-modal>
+<router-outlet></router-outlet>
