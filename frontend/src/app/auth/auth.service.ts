@@ -17,6 +17,10 @@ interface SigninResponse {
   login: string;
 }
 
+interface CheckAuthResponse {
+  isAuth: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -47,9 +51,10 @@ export class AuthService {
   }
 
   checkAuth() {
-    return this.http.get(`${this.rootUrl}/auth`).pipe(
+    return this.http.get<CheckAuthResponse>(`${this.rootUrl}/auth`).pipe(
       tap((response) => {
         console.log(`Outcome of checkAuth() - ${response}`);
+        this.signedin$.next(response.isAuth);
       })
     );
   }
