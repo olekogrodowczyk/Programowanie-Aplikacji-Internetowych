@@ -34,7 +34,14 @@
         Strona główna
       </a>
       <ng-container *ngIf="signedIn$ | async">
-        <a class="navbar-item"> Osoby </a>
+        <a
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLinkActive="is-active"
+          routerLink="/persons"
+          class="navbar-item"
+        >
+          Osoby
+        </a>
         <a class="navbar-item"> Wpłaty </a>
         <a class="navbar-item"> Transakcje </a>
       </ng-container>
