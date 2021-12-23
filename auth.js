@@ -27,6 +27,7 @@ const auth = (module.exports = {
       case "DELETE":
         delete lib.sessions[env.session].login;
         delete lib.sessions[env.session].roles;
+        delete lib.sessions[env.session].isAuth;
         lib.sendJson(env.res, lib.sessions[env.session]);
         break;
       default:

@@ -10,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class NavbarComponent implements OnInit {
   showLoginModal = false;
-  showLoginNotification = true;
+  showLoginNotification = false;
   signedIn$: BehaviorSubject<boolean>;
   constructor(private authService: AuthService) {
     this.signedIn$ = this.authService.signedin$;
@@ -22,5 +22,13 @@ export class NavbarComponent implements OnInit {
 
   selectItem() {
     this.showLoginModal = true;
+  }
+
+  onLogged() {
+    this.showLoginModal = false;
+    this.showLoginNotification = true;
+    setTimeout(() => {
+      this.showLoginNotification = false;
+    }, 3000);
   }
 }

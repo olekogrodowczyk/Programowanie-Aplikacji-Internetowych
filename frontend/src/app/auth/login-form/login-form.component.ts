@@ -8,6 +8,8 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login-form.component.css'],
 })
 export class LoginFormComponent implements OnInit {
+  @Output() onLogged = new EventEmitter();
+
   loginGroupForm = new FormGroup({
     login: new FormControl('', [
       Validators.required,
@@ -31,7 +33,9 @@ export class LoginFormComponent implements OnInit {
     }
 
     this.authService.signIn(this.loginGroupForm.value).subscribe({
-      next: () => {},
+      next: () => {
+        this.onLogged.emit(null);
+      },
       error: ({ error }) => {
         if (error.username || error.password) {
           this.loginGroupForm.setErrors({ credentials: true });
