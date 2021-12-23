@@ -1,12 +1,12 @@
 <app-notification
-  *ngIf="showLoginNotification"
-  (onClose)="showLoginNotification = false"
+  *ngIf="showNotification"
+  (onClose)="showNotification = false"
   >{{ notificationMessage }}</app-notification
 >
 
 <nav class="navbar is-link" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
+    <a class="navbar-item" routerLink="/home">
       <img src="../assets/cross.png" width="80" height="28" />
     </a>
 
@@ -44,10 +44,10 @@
       <div class="navbar-item">
         <div class="buttons">
           <ng-container *ngIf="!(signedIn$ | async)">
-            <a (click)="selectItem()" class="button is-primary">
+            <a (click)="showRegisterModal = true" class="button is-primary">
               <strong>Zarejestruj się</strong>
             </a>
-            <a (click)="selectItem()" class="button is-info">
+            <a (click)="showLoginModal = true" class="button is-info">
               <strong>Zaloguj się</strong>
             </a>
           </ng-container>
@@ -69,6 +69,21 @@
 >
   <ng-container>
     <app-login-form (onLogged)="onLogged($event)"></app-login-form>
+  </ng-container>
+  <ng-container modalFooter>
+    <button type="submit" form="loginForm" class="button is-primary">
+      Zaloguj się
+    </button>
+  </ng-container>
+</app-modal>
+
+<app-modal
+  *ngIf="showRegisterModal"
+  [title]="'Logowanie'"
+  (onClose)="showRegisterModal = false"
+>
+  <ng-container>
+    <app-register-form (onRegister)="onRegister($event)"></app-register-form>
   </ng-container>
   <ng-container modalFooter>
     <button type="submit" form="loginForm" class="button is-primary">

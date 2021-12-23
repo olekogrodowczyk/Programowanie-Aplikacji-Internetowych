@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 
@@ -8,6 +8,8 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./register-form.component.css'],
 })
 export class RegisterFormComponent implements OnInit {
+  @Output() onRegister = new EventEmitter<boolean>();
+
   registerGroupForm = new FormGroup({
     login: new FormControl('', [
       Validators.required,
@@ -36,11 +38,14 @@ export class RegisterFormComponent implements OnInit {
     }
 
     this.authService.signIn(this.registerGroupForm.value).subscribe({
-      next: () => {},
+      next: () => {
+        this.onRegister.emit(true);
+      },
       error: ({ error }) => {
         if (error.username || error.password || error.passwordConfirm) {
           this.registerGroupForm.setErrors({ credentials: true });
         }
+        this.onRegister.emit(false);
       },
     });
   }
