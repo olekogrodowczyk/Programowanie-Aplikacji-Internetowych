@@ -25,7 +25,14 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item"> Strona główna </a>
+      <a
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="is-active"
+        routerLink="/home"
+        class="navbar-item"
+      >
+        Strona główna
+      </a>
       <ng-container *ngIf="signedIn$ | async">
         <a class="navbar-item"> Osoby </a>
         <a class="navbar-item"> Wpłaty </a>

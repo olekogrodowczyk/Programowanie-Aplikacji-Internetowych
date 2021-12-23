@@ -60,7 +60,7 @@ export class AuthService {
   }
 
   signout() {
-    return this.http.post(`${this.rootUrl}/auth/signout`, {}).pipe(
+    return this.http.delete(`${this.rootUrl}/auth`, {}).pipe(
       tap(() => {
         this.signedin$.next(false);
       })
