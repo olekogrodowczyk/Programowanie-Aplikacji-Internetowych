@@ -1,4 +1,6 @@
-<div class="notification is-info">
-  <button (click)="cancel()" class="delete"></button>
-  <ng-content></ng-content>
+<div class="notification-container">
+  <div class="notification is-primary is-size-4 has-text-weight-bold">
+    <button (click)="cancel()" class="delete"></button>
+    <ng-content></ng-content>
+  </div>
 </div>

@@ -53,4 +53,12 @@ export class NavbarComponent implements OnInit {
       this.showNotification = false;
     }, 3000);
   }
+
+  onLogout() {
+    this.notificationMessage = 'Pomyślnie wylogowano';
+    this.showNotification = true;
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 3000);
+  }
 }

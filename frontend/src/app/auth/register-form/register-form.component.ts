@@ -37,14 +37,13 @@ export class RegisterFormComponent implements OnInit {
       return;
     }
 
-    this.authService.signIn(this.registerGroupForm.value).subscribe({
+    this.authService.signUp(this.registerGroupForm.value).subscribe({
       next: () => {
         this.onRegister.emit(true);
       },
-      error: ({ error }) => {
-        if (error.username || error.password || error.passwordConfirm) {
-          this.registerGroupForm.setErrors({ credentials: true });
-        }
+      error: ({ cause }) => {
+        this.registerGroupForm.setErrors({ credentials: true });
+        console.log(cause);
         this.onRegister.emit(false);
       },
     });

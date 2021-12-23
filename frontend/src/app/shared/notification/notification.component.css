@@ -1,12 +1,19 @@
 .notification {
-  visibility: visible; /* Hidden by default. Visible on click */
-  min-width: 400px; /* Set a default minimum width */
-  margin-left: -125px; /* Divide value of min-width by 2 */
-  text-align: center; /* Centered text */
-  border-radius: 2px; /* Rounded borders */
-  padding: 16px; /* Padding */
-  position: fixed; /* Sit on top of the screen */
-  z-index: 1000; /* Add a z-index if needed */
-  left: 50%; /* Center the snackbar */
-  top: 20px; /* 30px from the bottom */
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  animation: fadein 1.5s;
+  margin-bottom: 1rem;
+  padding: 1rem 1.25rem;
+  color: #fff;
+  width: 25vw;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 40px;
+}
+.notification-container {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 1000;
+  bottom: 1rem;
+  right: 1rem;
 }

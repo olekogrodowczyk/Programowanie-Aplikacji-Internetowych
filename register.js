@@ -25,11 +25,11 @@ const register = (module.exports = {
       user = validate(env.payload);
       let userExists = await validateExistance();
       if (!user) {
-        lib.sendError(env.res, 400, "invalid payload");
+        lib.sendError(env.res, 400, "Invalid data");
         return;
       }
       if (userExists) {
-        lib.sendError(env.res, 400, "user already exists");
+        lib.sendError(env.res, 400, "User with defined login already exists");
         return;
       }
     }
