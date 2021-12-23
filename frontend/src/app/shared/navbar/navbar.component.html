@@ -52,7 +52,7 @@
             </a>
           </ng-container>
           <ng-container *ngIf="signedIn$ | async">
-            <a routerLink="/signout" class="button is-info">
+            <a (click)="onLogout()" class="button is-info">
               <strong>Wyloguj się</strong>
             </a>
           </ng-container>

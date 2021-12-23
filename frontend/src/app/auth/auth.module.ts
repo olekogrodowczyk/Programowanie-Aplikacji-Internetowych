@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterFormComponent } from './register-form/register-form.component';
-import { SignoutComponent } from './signout/signout.component';
 
 @NgModule({
-  declarations: [LoginFormComponent, RegisterFormComponent, SignoutComponent],
+  declarations: [LoginFormComponent, RegisterFormComponent],
   imports: [CommonModule, ReactiveFormsModule],
   exports: [LoginFormComponent, RegisterFormComponent],
 })

@@ -45,7 +45,7 @@ export class AuthService {
   signUp(credentials: SignupCredentials) {
     return this.http.post(`${this.rootUrl}/register`, credentials).pipe(
       tap(() => {
-        this.signedin$.next(true);
+        this.signedin$.next(false);
       })
     );
   }
@@ -60,7 +60,7 @@ export class AuthService {
   }
 
   signout() {
-    return this.http.delete(`${this.rootUrl}/auth`, {}).pipe(
+    return this.http.delete(`${this.rootUrl}/auth`).pipe(
       tap(() => {
         this.signedin$.next(false);
       })
