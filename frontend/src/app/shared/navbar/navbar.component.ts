@@ -12,6 +12,8 @@ export class NavbarComponent implements OnInit {
   showLoginModal = false;
   showLoginNotification = false;
   signedIn$: BehaviorSubject<boolean>;
+  notificationMessage = '';
+
   constructor(private authService: AuthService) {
     this.signedIn$ = this.authService.signedin$;
   }
@@ -24,7 +26,12 @@ export class NavbarComponent implements OnInit {
     this.showLoginModal = true;
   }
 
-  onLogged() {
+  onLogged(value: boolean) {
+    if (value === true) {
+      this.notificationMessage = 'Pomyślnie zalogowano użytkownika';
+    } else {
+      this.notificationMessage = 'Podano błędne dane';
+    }
     this.showLoginModal = false;
     this.showLoginNotification = true;
     setTimeout(() => {

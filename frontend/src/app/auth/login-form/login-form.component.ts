@@ -8,7 +8,7 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login-form.component.css'],
 })
 export class LoginFormComponent implements OnInit {
-  @Output() onLogged = new EventEmitter();
+  @Output() onLogged = new EventEmitter<boolean>();
 
   loginGroupForm = new FormGroup({
     login: new FormControl('', [
@@ -34,12 +34,13 @@ export class LoginFormComponent implements OnInit {
 
     this.authService.signIn(this.loginGroupForm.value).subscribe({
       next: () => {
-        this.onLogged.emit(null);
+        this.onLogged.emit(true);
       },
       error: ({ error }) => {
         if (error.username || error.password) {
           this.loginGroupForm.setErrors({ credentials: true });
         }
+        this.onLogged.emit(false);
       },
     });
   }
