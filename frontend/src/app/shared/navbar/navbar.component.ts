@@ -4,6 +4,7 @@ import { RegisterFormComponent } from 'src/app/auth/register-form/register-form.
 import { AuthService } from 'src/app/auth/auth.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { SnackBarService } from '../snack-bar.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,14 +14,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class NavbarComponent implements OnInit {
   showLoginModal = false;
   showRegisterModal = false;
-  showNotification = false;
   signedIn$: BehaviorSubject<boolean>;
-  notificationMessage = '';
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: SnackBarService
   ) {
     this.signedIn$ = this.authService.signedin$;
   }
@@ -34,44 +34,38 @@ export class NavbarComponent implements OnInit {
   }
 
   onLogged(value: boolean) {
+    let notificationMessage = '';
     if (value === true) {
-      this.notificationMessage = 'Pomyślnie zalogowano użytkownika';
+      notificationMessage = 'Pomyślnie zalogowano użytkownika';
     } else {
-      this.notificationMessage = 'Podano błędne dane';
+      notificationMessage = 'Podano błędne dane';
     }
     this.showLoginModal = false;
-    this.showNotification = true;
-    setTimeout(() => {
-      this.showNotification = false;
-    }, 3000);
+    this.snackBar.openSnackBar(notificationMessage, 'OK');
   }
 
   onRegister(value: boolean) {
+    let notificationMessage = '';
     if (value === true) {
-      this.notificationMessage = 'Pomyślnie zalogowano użytkownika';
+      notificationMessage = 'Pomyślnie zalogowano użytkownika';
     } else {
-      this.notificationMessage = 'Podano błędne dane';
+      notificationMessage = 'Podano błędne dane';
     }
     this.showRegisterModal = false;
-    this.showNotification = true;
-    setTimeout(() => {
-      this.showNotification = false;
-    }, 3000);
+    this.snackBar.openSnackBar(notificationMessage, 'OK');
   }
 
   onLogout() {
+    let notificationMessage = '';
     this.authService.signout().subscribe({
       next: () => {
-        this.notificationMessage = 'Pomyślnie wylogowano użytkownika';
+        notificationMessage = 'Pomyślnie wylogowano użytkownika';
       },
       error: ({ cause }) => {
-        this.notificationMessage = 'Nastąpił błąd przy wylogowywaniu';
+        notificationMessage = 'Nastąpił błąd przy wylogowywaniu';
       },
       complete: () => {
-        this.showNotification = true;
-        setTimeout(() => {
-          this.showNotification = false;
-        }, 3000);
+        this.snackBar.openSnackBar(notificationMessage, 'OK');
         this.router.navigate(['/home'], { relativeTo: this.route });
       },
     });

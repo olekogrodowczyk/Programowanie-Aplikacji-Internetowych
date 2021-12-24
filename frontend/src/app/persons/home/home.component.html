@@ -1,9 +1,3 @@
-<app-notification
-  *ngIf="showNotification"
-  (onClose)="showNotification = false"
-  >{{ notificationMessage }}</app-notification
->
-
 <a (click)="showAddPersonModal = true" class="button is-link">Dodaj osobę</a>
 <table class="table is-bordered is-hoverable mt-2">
   <thead>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Person, PersonsService } from '../persons.service';
 import { AddPersonFormComponent } from '../add-person-form/add-person-form.component';
 import { NotificationComponent } from 'src/app/shared/notification/notification.component';
+import { SnackBarService } from 'src/app/shared/snack-bar.service';
 
 @Component({
   selector: 'app-home',
@@ -9,11 +10,12 @@ import { NotificationComponent } from 'src/app/shared/notification/notification.
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  showNotification = false;
   persons: Person[] = [];
   showAddPersonModal = false;
-  notificationMessage = '';
-  constructor(private personsService: PersonsService) {}
+  constructor(
+    private personsService: PersonsService,
+    private snackBar: SnackBarService
+  ) {}
 
   ngOnInit(): void {
     this.personsService.getPersons().subscribe({
@@ -27,15 +29,13 @@ export class HomeComponent implements OnInit {
   }
 
   onAddPersonSubmit(value: boolean) {
+    let notificationMessage = '';
     if (value === true) {
-      this.notificationMessage = 'Pomyślnie dodano osobę';
+      notificationMessage = 'Pomyślnie dodano osobę';
     } else {
-      this.notificationMessage = 'Podano błędne dane';
+      notificationMessage = 'Podano błędne dane';
     }
     this.showAddPersonModal = false;
-    this.showNotification = true;
-    setTimeout(() => {
-      this.showNotification = false;
-    }, 3000);
+    this.snackBar.openSnackBar(notificationMessage, 'Ok');
   }
 }

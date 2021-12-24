@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor } from './auth/auth-http-interceptor';
 import { HomeComponent } from './home/home.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -18,6 +19,7 @@ import { HomeComponent } from './home/home.component';
     SharedModule,
     AuthModule,
     HttpClientModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     {
