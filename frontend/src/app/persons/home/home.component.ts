@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Person, PersonsService } from '../persons.service';
 import { AddPersonFormComponent } from '../add-person-form/add-person-form.component';
+import { EditPersonComponent } from '../edit-person/edit-person.component';
 import { NotificationComponent } from 'src/app/shared/notification/notification.component';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 
@@ -11,7 +12,10 @@ import { SnackBarService } from 'src/app/shared/snack-bar.service';
 })
 export class HomeComponent implements OnInit {
   persons: Person[] = [];
+  personToEdit: Person = {} as Person;
   showAddPersonModal = false;
+  showEditPersonModal = false;
+
   constructor(
     private personsService: PersonsService,
     private snackBar: SnackBarService
@@ -28,6 +32,11 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  onEditClick(person: Person) {
+    this.personToEdit = person;
+    this.showEditPersonModal = true;
+  }
+
   onAddPersonSubmit(value: boolean) {
     let notificationMessage = '';
     if (value === true) {
@@ -37,5 +46,16 @@ export class HomeComponent implements OnInit {
     }
     this.showAddPersonModal = false;
     this.snackBar.openSnackBar(notificationMessage, 'Ok');
+  }
+
+  onEditPersonSubmit(value: boolean) {
+    let notificationMessage = '';
+    if (value === true) {
+      notificationMessage = 'Pomyślnie edytowano osobę';
+    } else {
+      notificationMessage = 'Podano błędne dane';
+    }
+    this.showEditPersonModal = false;
+    this.snackBar.openSnackBar(notificationMessage, 'OK');
   }
 }

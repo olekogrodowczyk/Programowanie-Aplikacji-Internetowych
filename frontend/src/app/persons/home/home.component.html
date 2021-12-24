@@ -1,5 +1,7 @@
-<a (click)="showAddPersonModal = true" class="button is-link">Dodaj osobę</a>
-<table class="table is-bordered is-hoverable mt-2">
+<a (click)="showAddPersonModal = true" class="button is-link block"
+  >Dodaj osobę</a
+>
+<table class="table is-bordered is-hoverable is-size-6">
   <thead>
     <tr>
       <th>#</th>
@@ -20,8 +22,12 @@
       <td>{{ person.year }}</td>
       <td>{{ person.transactions }}</td>
       <td>{{ person.balance }}</td>
-      <td><button class="button is-link">Edytuj</button></td>
-      <td><button class="button is-link">Przejdź</button></td>
+      <td>
+        <button (click)="onEditClick(person)" class="button is-link is-small">
+          Edytuj
+        </button>
+      </td>
+      <td><button class="button is-link is-small">Przejdź</button></td>
     </tr>
   </tbody>
 </table>
@@ -39,6 +45,24 @@
   <ng-container modalFooter>
     <button type="submit" form="addPersonForm" class="button is-primary">
       Dodaj
+    </button>
+  </ng-container>
+</app-modal>
+
+<app-modal
+  [title]="'Edytowanie osoby'"
+  *ngIf="showEditPersonModal"
+  (onClose)="showEditPersonModal = false"
+>
+  <ng-container>
+    <app-edit-person
+      [person]="personToEdit"
+      (onEdit)="onEditPersonSubmit($event)"
+    ></app-edit-person>
+  </ng-container>
+  <ng-container modalFooter>
+    <button type="submit" form="editPersonForm" class="button is-primary">
+      Edytuj
     </button>
   </ng-container>
 </app-modal>

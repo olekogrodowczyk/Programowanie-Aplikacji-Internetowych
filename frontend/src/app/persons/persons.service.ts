@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 export interface Person {
   _id: number;
@@ -11,6 +12,13 @@ export interface Person {
 }
 
 export interface addPersonCredentials {
+  firstName: string;
+  lastName: string;
+  year: number;
+}
+
+export interface editPersonCredentials {
+  _id: number;
   firstName: string;
   lastName: string;
   year: number;
@@ -29,5 +37,9 @@ export class PersonsService {
 
   addPerson(credentials: addPersonCredentials) {
     return this.http.post(`${this.rootUrl}/person`, credentials);
+  }
+
+  editPerson(credentials: editPersonCredentials) {
+    return this.http.put(`${this.rootUrl}/person`, credentials);
   }
 }
