@@ -1,0 +1,41 @@
+<form [formGroup]="addPersonForm" (ngSubmit)="onSubmit()" id="addPersonForm">
+  <div class="field">
+    <p class="control has-icons-left has-icons-right">
+      <input
+        class="input"
+        type="text"
+        placeholder="Imię"
+        formControlName="firstName"
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-user"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control has-icons-left">
+      <input
+        class="input"
+        type="text"
+        placeholder="Nazwisko"
+        formControlName="lastName"
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-lock"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control has-icons-left">
+      <input
+        class="input"
+        type="number"
+        placeholder="Rok urodzenia"
+        formControlName="year"
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-lock"></i>
+      </span>
+    </p>
+  </div>
+</form>

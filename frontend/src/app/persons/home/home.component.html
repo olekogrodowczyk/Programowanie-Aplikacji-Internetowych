@@ -1,1 +1,50 @@
-<p>persons works!</p>
+<app-notification
+  *ngIf="showNotification"
+  (onClose)="showNotification = false"
+  >{{ notificationMessage }}</app-notification
+>
+
+<a (click)="showAddPersonModal = true" class="button is-link">Dodaj osobę</a>
+<table class="table is-bordered is-hoverable mt-2">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Imię</th>
+      <th>Nazwisko</th>
+      <th>Rok urodzenia</th>
+      <th>Transakcji</th>
+      <th>Stan konta</th>
+      <th>Akcje</th>
+      <th>Historia transakcji</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let person of persons; index as i">
+      <td>{{ i + 1 }}</td>
+      <td>{{ person.firstName }}</td>
+      <td>{{ person.lastName }}</td>
+      <td>{{ person.year }}</td>
+      <td>{{ person.transactions }}</td>
+      <td>{{ person.balance }}</td>
+      <td><button class="button is-link">Edytuj</button></td>
+      <td><button class="button is-link">Przejdź</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<app-modal
+  [title]="'Dodawanie osoby'"
+  *ngIf="showAddPersonModal"
+  (onClose)="showAddPersonModal = false"
+>
+  <ng-container>
+    <app-add-person-form
+      (onAdd)="onAddPersonSubmit($event)"
+    ></app-add-person-form>
+  </ng-container>
+  <ng-container modalFooter>
+    <button type="submit" form="addPersonForm" class="button is-primary">
+      Dodaj
+    </button>
+  </ng-container>
+</app-modal>

@@ -6,7 +6,6 @@ import { ModalComponent } from './modal/modal.component';
 import { AuthModule } from '../auth/auth.module';
 import { NotificationComponent } from './notification/notification.component';
 import { SharedRoutingModule } from './shared-routing.module';
-import { AppRoutingModule } from '../app-routing.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +14,12 @@ import { AppRoutingModule } from '../app-routing.module';
     ModalComponent,
     NotificationComponent,
   ],
-  imports: [CommonModule, AuthModule, AppRoutingModule, SharedRoutingModule],
-  exports: [NavbarComponent, FooterComponent, ModalComponent],
+  imports: [CommonModule, AuthModule, SharedRoutingModule],
+  exports: [
+    NavbarComponent,
+    FooterComponent,
+    ModalComponent,
+    NotificationComponent,
+  ],
 })
 export class SharedModule {}
