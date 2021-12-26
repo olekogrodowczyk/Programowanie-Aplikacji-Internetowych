@@ -11,6 +11,7 @@ const auth = require("./auth");
 const example = require("./example");
 const deposit = require("./deposit");
 const register = require("./register");
+const transaction = require("./transaction");
 
 let server = http.createServer();
 
@@ -100,6 +101,8 @@ server.on("request", function (req, res) {
         case "/register":
           register.handle(env);
           break;
+        case "/transaction":
+          transaction.handle(env);
         default:
           console.log("Error in requests");
       }
