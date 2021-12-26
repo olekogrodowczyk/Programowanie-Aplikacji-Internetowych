@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit {
     }
     this.showAddPersonModal = false;
     this.snackBar.openSnackBar(notificationMessage, 'Ok');
+    this.ngOnInit();
   }
 
   onEditPersonSubmit(value: boolean) {
