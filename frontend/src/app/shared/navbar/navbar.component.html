@@ -37,7 +37,14 @@
           Osoby
         </a>
         <a class="navbar-item"> Wpłaty </a>
-        <a class="navbar-item"> Transakcje </a>
+        <a
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLinkActive="is-active"
+          routerLink="/transactions"
+          class="navbar-item"
+        >
+          Transakcje
+        </a>
       </ng-container>
     </div>
 

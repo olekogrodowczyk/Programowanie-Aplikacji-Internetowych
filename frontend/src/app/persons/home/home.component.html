@@ -1,36 +1,45 @@
-<a (click)="showAddPersonModal = true" class="button is-link block"
-  >Dodaj osobę</a
->
-<table class="table is-bordered is-hoverable is-size-6">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Imię</th>
-      <th>Nazwisko</th>
-      <th>Rok urodzenia</th>
-      <th>Transakcji</th>
-      <th>Stan konta</th>
-      <th>Akcje</th>
-      <th>Historia transakcji</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let person of persons; index as i">
-      <td>{{ i + 1 }}</td>
-      <td>{{ person.firstName }}</td>
-      <td>{{ person.lastName }}</td>
-      <td>{{ person.year }}</td>
-      <td>{{ person.transactions }}</td>
-      <td>{{ person.balance }}</td>
-      <td>
-        <button (click)="onEditClick(person)" class="button is-link is-small">
-          Edytuj
-        </button>
-      </td>
-      <td><button class="button is-link is-small">Przejdź</button></td>
-    </tr>
-  </tbody>
-</table>
+<div class="box">
+  <a (click)="showAddPersonModal = true" class="button is-link block"
+    >Dodaj osobę</a
+  >
+  <table class="table is-bordered is-hoverable is-size-6">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th>Rok urodzenia</th>
+        <th>Transakcji</th>
+        <th>Stan konta</th>
+        <th>Akcje</th>
+        <th>Historia transakcji</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let person of persons; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ person.firstName }}</td>
+        <td>{{ person.lastName }}</td>
+        <td>{{ person.year }}</td>
+        <td>{{ person.transactions }}</td>
+        <td>{{ person.balance }}</td>
+        <td>
+          <button (click)="onEditClick(person)" class="button is-link is-small">
+            Edytuj
+          </button>
+        </td>
+        <td>
+          <a
+            [routerLink]="['/transactions']"
+            [queryParams]="{ recipientId: person._id }"
+            class="button is-link is-small"
+            >Przejdź</a
+          >
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <app-modal
   [title]="'Dodawanie osoby'"

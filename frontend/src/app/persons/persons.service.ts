@@ -42,4 +42,8 @@ export class PersonsService {
   editPerson(credentials: editPersonCredentials) {
     return this.http.put(`${this.rootUrl}/person`, credentials);
   }
+
+  getPersonById(personId: string) {
+    return this.http.get<Person>(`${this.rootUrl}/person?_id=${personId}`);
+  }
 }
