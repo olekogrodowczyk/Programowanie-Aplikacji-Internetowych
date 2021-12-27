@@ -1,22 +1,18 @@
-<div class="box">
-  <table
-    class="table is-bordered is-striped is-hoverable is-fullwidth is-size-6"
-  >
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Wpłacający</th>
-        <th>Kwota</th>
-        <th>Data</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let transaction of transactions; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ transaction.recipientName }}</td>
-        <td>{{ transaction.amount }}</td>
-        <td>{{ transaction.when | date: "dd.MM.yyyy HH:mm" }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<table class="table is-bordered is-striped is-hoverable is-fullwidth is-size-6">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Wpłacający</th>
+      <th>Kwota</th>
+      <th>Data</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let transaction of transactions; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ transaction.recipientName }}</td>
+      <td>{{ transaction.amount }}</td>
+      <td>{{ transaction.when | date: "dd.MM.yyyy HH:mm" }}</td>
+    </tr>
+  </tbody>
+</table>

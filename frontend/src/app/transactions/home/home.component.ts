@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import {
   TransactionResponse,
   TransactionsService,
@@ -17,16 +18,20 @@ export class HomeComponent implements OnInit {
   transactions: TransactionResponse[] = [];
   constructor(
     private route: ActivatedRoute,
-    private transactionsService: TransactionsService
+    private transactionsService: TransactionsService,
+    private snackBar: SnackBarService
   ) {}
 
   ngOnInit(): void {
     this.recipientId = this.route.snapshot.queryParamMap.get('recipientId');
     console.log(this.recipientId);
     if (this.recipientId == null) {
-      this.title = 'Wszystkie tranzakcje';
+      this.title = 'Wszystkie transakcje';
       this.transactionsService.getAllTransactions().subscribe({
-        next: (response) => (this.transactions = response),
+        next: (response) => {
+          this.transactions = response;
+          this.showNotification();
+        },
         error: () => {
           console.log('Unexpected error occurred');
         },
@@ -37,11 +42,17 @@ export class HomeComponent implements OnInit {
         .subscribe({
           next: (response) => {
             this.transactions = response;
+            this.showNotification();
           },
           error: () => {
             console.log('Unexpected error occurred');
           },
         });
     }
+  }
+  showNotification() {
+    this.transactions.length > 0
+      ? this.snackBar.openSnackBar('Pomyślnie pobrano transakcje', 'OK')
+      : this.snackBar.openSnackBar('Nie znaleziono żadnych transakcji', 'OK');
   }
 }
