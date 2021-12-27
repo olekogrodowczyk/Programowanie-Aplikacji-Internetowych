@@ -10,6 +10,7 @@ import { SnackBarService } from 'src/app/shared/snack-bar.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  filterValue: string = '';
   persons: Person[] = [];
   personToEdit: Person = {} as Person;
   showAddPersonModal = false;
@@ -29,6 +30,20 @@ export class HomeComponent implements OnInit {
         console.log('Error caught!');
       },
     });
+  }
+
+  getFilterValue(event: Event): string {
+    return (event.target as HTMLInputElement).value;
+  }
+
+  afterFiltered(...params: string[]): boolean {
+    let found: boolean = false;
+    params.forEach((element: string) => {
+      if (element.toLowerCase().search(this.filterValue.toLowerCase()) != -1) {
+        found = true;
+      }
+    });
+    return found;
   }
 
   onEditClick(person: Person) {
