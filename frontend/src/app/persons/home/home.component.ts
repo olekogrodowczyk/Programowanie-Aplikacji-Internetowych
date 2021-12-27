@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Person, PersonsService } from '../persons.service';
 import { AddPersonFormComponent } from '../add-person-form/add-person-form.component';
 import { EditPersonComponent } from '../edit-person/edit-person.component';
-import { NotificationComponent } from 'src/app/shared/notification/notification.component';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 
 @Component({
