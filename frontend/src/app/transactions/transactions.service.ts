@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Person, PersonsService } from '../persons/persons.service';
-import { map, tap } from 'rxjs';
 
 export interface TransactionResponse {
+  _id: string;
   recipientId: string;
   recipientName: string;
   amount: number;
   when: number;
+}
+
+export interface DepositRequest {
+  recipient: string;
+  amount: number;
 }
 
 @Injectable({
@@ -15,10 +19,7 @@ export interface TransactionResponse {
 })
 export class TransactionsService {
   rootUrl = 'http://localhost:7777';
-  constructor(
-    private http: HttpClient,
-    private personService: PersonsService
-  ) {}
+  constructor(private http: HttpClient) {}
 
   getAllTransactions() {
     return this.http.get<TransactionResponse[]>(`${this.rootUrl}/transaction`);
@@ -27,6 +28,13 @@ export class TransactionsService {
   getTransactionsByRecipiendId(recipientId: string) {
     return this.http.get<TransactionResponse[]>(
       `${this.rootUrl}/transaction?recipientId=${recipientId}`
+    );
+  }
+
+  sendDeposit(payload: DepositRequest) {
+    return this.http.post<TransactionResponse>(
+      `${this.rootUrl}/deposit`,
+      payload
     );
   }
 }

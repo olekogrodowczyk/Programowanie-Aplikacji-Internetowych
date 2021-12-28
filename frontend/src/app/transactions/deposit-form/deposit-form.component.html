@@ -1,0 +1,20 @@
+<form [formGroup]="depositForm" (ngSubmit)="onSubmit()">
+  <div class="field">
+    <div class="select is-multiple is-size-6 is-fullwidth">
+      <select multiple size="8" formControlName="recipient">
+        <option *ngFor="let person of persons" [ngValue]="person">
+          {{ person.firstName + " " + person.lastName }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="field is-grouped mt-auto">
+    <input
+      class="input"
+      type="number"
+      placeholder="Kwota"
+      formControlName="amount"
+    />
+    <button class="button is-link ml-5">Wpłać</button>
+  </div>
+</form>

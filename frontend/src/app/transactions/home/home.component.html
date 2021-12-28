@@ -1,22 +1,39 @@
 <div class="box">
-  <table
-    class="table is-bordered is-striped is-hoverable is-fullwidth is-size-6"
-  >
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Wpłacający</th>
-        <th>Kwota</th>
-        <th>Data</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let transaction of transactions; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ transaction.recipientName }}</td>
-        <td>{{ transaction.amount }}</td>
-        <td>{{ transaction.when | date: "dd.MM.yyyy HH:mm" }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="columns">
+    <div class="column is-4 is-flex is-flex-direction-column">
+      <app-deposit-form (isDone)="refresh($event)"></app-deposit-form>
+    </div>
+    <div class="column is-6 is-offset-2">
+      <input
+        *ngIf="!recipientId"
+        [value]="filterPersonValue"
+        (input)="filterPersonValue = getFilterPersonValue($event)"
+        class="input input-filter is-normal mb-5"
+        type="text"
+        placeholder="Filtruj"
+      />
+      <table
+        class="table is-bordered is-striped is-hoverable is-fullwidth is-size-6"
+      >
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Wpłacający</th>
+            <th>Kwota</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let transaction of transactions; let i = index">
+            <ng-container *ngIf="afterFiltered(transaction.recipientName)">
+              <td>{{ i + 1 }}</td>
+              <td>{{ transaction.recipientName }}</td>
+              <td>{{ transaction.amount }}</td>
+              <td>{{ transaction.when | date: "dd.MM.yyyy HH:mm" }}</td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
