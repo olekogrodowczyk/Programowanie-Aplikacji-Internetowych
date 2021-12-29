@@ -38,6 +38,10 @@ export class DepositFormComponent implements OnInit {
     if (!this.depositForm.valid) {
       return false;
     }
+    if (this.depositForm.value.recipient[0] === undefined) {
+      this.snackBar.openSnackBar('Nie wybrano adresata wpłaty', 'OK');
+      return false;
+    }
     let newFormValue = {
       amount: this.depositForm.value.amount,
       recipient: this.depositForm.value.recipient[0]._id,
@@ -45,11 +49,9 @@ export class DepositFormComponent implements OnInit {
     this.transactionsService.sendDeposit(newFormValue).subscribe({
       next: () => {
         this.isDone.emit(true);
-        this.snackBar.openSnackBar('Pomyślnie wpłacono podaną kwotę', 'OK');
       },
       error: () => {
         this.isDone.emit(false);
-        this.snackBar.openSnackBar('Nie udało się wpłacić kwoty', 'OK');
       },
     });
     return true;

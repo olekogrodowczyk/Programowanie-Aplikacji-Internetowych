@@ -1,7 +1,10 @@
 <div class="box">
   <div class="columns">
     <div class="column is-4 is-flex is-flex-direction-column">
-      <app-deposit-form (isDone)="refresh($event)"></app-deposit-form>
+      <app-deposit-form
+        *ngIf="checkDepositPermission(['admin'])"
+        (isDone)="refresh($event)"
+      ></app-deposit-form>
     </div>
     <div class="column is-6 is-offset-2">
       <input

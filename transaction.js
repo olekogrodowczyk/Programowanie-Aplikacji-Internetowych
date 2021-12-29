@@ -24,7 +24,6 @@ const person = (module.exports = {
                 };
               })
             );
-            console.log(newArray);
             lib.sendJson(env.res, newArray);
           } else {
             lib.sendError(env.res, 400, "persons.aggregate() failed " + err);

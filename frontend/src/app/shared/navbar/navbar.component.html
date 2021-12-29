@@ -48,6 +48,9 @@
     </div>
 
     <div class="navbar-end">
+      <div class="navbar-item" *ngIf="username$ | async">
+        Witaj, {{ username$.getValue() }}
+      </div>
       <div class="navbar-item">
         <div class="buttons">
           <ng-container *ngIf="!(signedIn$ | async)">

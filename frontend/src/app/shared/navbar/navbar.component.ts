@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   showLoginModal = false;
   showRegisterModal = false;
   signedIn$: BehaviorSubject<boolean>;
+  username$: BehaviorSubject<string>;
 
   constructor(
     private authService: AuthService,
@@ -23,6 +24,7 @@ export class NavbarComponent implements OnInit {
     private snackBar: SnackBarService
   ) {
     this.signedIn$ = this.authService.signedin$;
+    this.username$ = this.authService.username$;
   }
 
   ngOnInit(): void {
@@ -69,5 +71,9 @@ export class NavbarComponent implements OnInit {
         this.router.navigate(['/home'], { relativeTo: this.route });
       },
     });
+  }
+
+  checkDepositPermission(roles: string[]): boolean {
+    return this.authService.checkPermission(roles);
   }
 }

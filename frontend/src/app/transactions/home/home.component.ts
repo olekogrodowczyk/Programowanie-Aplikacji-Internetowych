@@ -1,6 +1,7 @@
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import {
   TransactionResponse,
@@ -19,7 +20,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private transactionsService: TransactionsService,
-    private snackBar: SnackBarService
+    private snackBar: SnackBarService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -29,7 +31,6 @@ export class HomeComponent implements OnInit {
       this.transactionsService.getAllTransactions().subscribe({
         next: (response) => {
           this.transactions = response;
-          this.showNotification();
         },
         error: () => {
           console.log('Unexpected error occurred');
@@ -41,7 +42,6 @@ export class HomeComponent implements OnInit {
         .subscribe({
           next: (response) => {
             this.transactions = response;
-            this.showNotification();
           },
           error: () => {
             console.log('Unexpected error occurred');
@@ -62,16 +62,16 @@ export class HomeComponent implements OnInit {
     return false;
   }
 
-  showNotification() {
-    this.transactions.length > 0
-      ? this.snackBar.openSnackBar('Pomyślnie pobrano transakcje', 'OK')
-      : this.snackBar.openSnackBar('Nie znaleziono żadnych transakcji', 'OK');
-  }
-
   refresh(value: boolean) {
-    console.log(value);
     if (value) {
       this.ngOnInit();
+      this.snackBar.openSnackBar('Pomyślnie wpłacono podaną kwotę', 'OK');
+    } else {
+      this.snackBar.openSnackBar('Nie udało się wpłacić kwoty', 'OK');
     }
+  }
+
+  checkDepositPermission(roles: string[]): boolean {
+    return this.authService.checkPermission(roles);
   }
 }

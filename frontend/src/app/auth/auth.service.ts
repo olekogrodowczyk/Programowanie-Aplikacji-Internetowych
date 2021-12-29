@@ -15,18 +15,22 @@ interface SigninCredentials {
 
 interface SigninResponse {
   login: string;
+  roles: string[];
 }
 
 interface CheckAuthResponse {
   isAuth: boolean;
+  roles: string[];
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  username = '';
+  roles$ = new BehaviorSubject<string[]>([]);
+  username$ = new BehaviorSubject<string>('');
   rootUrl = 'http://localhost:7777';
+
   signedin$ = new BehaviorSubject(false);
 
   constructor(private http: HttpClient) {}
@@ -37,7 +41,8 @@ export class AuthService {
       .pipe(
         tap((response) => {
           this.signedin$.next(true);
-          this.username = response.login;
+          this.username$.next(response.login);
+          this.roles$.next(response.roles);
         })
       );
   }
@@ -50,11 +55,23 @@ export class AuthService {
     );
   }
 
+  checkPermission(roles: string[]): boolean {
+    let exists: boolean = false;
+    let userRoles = this.roles$.getValue();
+    roles.forEach((item) => {
+      if (userRoles.includes(item)) {
+        exists = true;
+      }
+    });
+    return exists;
+  }
+
   checkAuth() {
     return this.http.get<CheckAuthResponse>(`${this.rootUrl}/auth`).pipe(
       tap((response) => {
         console.log(`Outcome of checkAuth() - ${response}`);
         this.signedin$.next(response.isAuth);
+        this.roles$.next(response.roles);
       })
     );
   }
@@ -63,6 +80,7 @@ export class AuthService {
     return this.http.delete(`${this.rootUrl}/auth`).pipe(
       tap(() => {
         this.signedin$.next(false);
+        this.username$.next('');
       })
     );
   }

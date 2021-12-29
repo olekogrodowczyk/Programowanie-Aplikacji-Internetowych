@@ -7,7 +7,10 @@ const auth = (module.exports = {
       case "GET":
         console.log(`Authenticated - ${lib.sessions[env.session].isAuth}`);
         let isAuthenticated = lib.sessions[env.session].isAuth;
-        lib.sendJson(env.res, { isAuth: isAuthenticated });
+        lib.sendJson(env.res, {
+          isAuth: isAuthenticated,
+          roles: lib.sessions[env.session].roles,
+        });
         break;
       case "POST":
         db.users.findOne(
