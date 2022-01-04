@@ -49,7 +49,7 @@ export class NavbarComponent implements OnInit {
   onRegister(value: boolean) {
     let notificationMessage = '';
     if (value === true) {
-      notificationMessage = 'Pomyślnie zalogowano użytkownika';
+      notificationMessage = 'Pomyślnie zarejestrowano użytkownika';
     } else {
       notificationMessage = 'Podano błędne dane';
     }

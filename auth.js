@@ -10,6 +10,7 @@ const auth = (module.exports = {
         lib.sendJson(env.res, {
           isAuth: isAuthenticated,
           roles: lib.sessions[env.session].roles,
+          login: lib.sessions[env.session].login,
         });
         break;
       case "POST":

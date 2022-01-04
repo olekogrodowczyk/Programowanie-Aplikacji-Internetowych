@@ -21,6 +21,7 @@ interface SigninResponse {
 interface CheckAuthResponse {
   isAuth: boolean;
   roles: string[];
+  login: string;
 }
 
 @Injectable({
@@ -72,6 +73,7 @@ export class AuthService {
         console.log(`Outcome of checkAuth() - ${response}`);
         this.signedin$.next(response.isAuth);
         this.roles$.next(response.roles);
+        this.username$.next(response.login);
       })
     );
   }

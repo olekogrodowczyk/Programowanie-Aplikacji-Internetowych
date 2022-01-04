@@ -1,11 +1,14 @@
 <div class="box">
-  <a (click)="showAddPersonModal = true" class="button is-link block"
+  <a
+    (click)="showAddPersonModal = true"
+    *ngIf="CheckAddPersonPermission(['admin', 'manager'])"
+    class="button is-link block mr-5"
     >Dodaj osobę</a
   >
   <input
     [value]="filterValue"
     (input)="filterValue = getFilterValue($event)"
-    class="input input-filter is-normal ml-5"
+    class="input input-filter is-normal block"
     type="text"
     placeholder="Filtruj"
   />
@@ -18,8 +21,10 @@
         <th>Rok urodzenia</th>
         <th>Transakcji</th>
         <th>Stan konta</th>
-        <th>Akcje</th>
-        <th>Historia transakcji</th>
+        <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">Akcje</th>
+        <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+          Historia transakcji
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -31,7 +36,7 @@
           <td>{{ person.year }}</td>
           <td>{{ person.transactions }}</td>
           <td>{{ person.balance }}</td>
-          <td>
+          <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
             <button
               (click)="onEditClick(person)"
               class="button is-link is-small"
@@ -39,7 +44,7 @@
               Edytuj
             </button>
           </td>
-          <td>
+          <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
             <a
               [routerLink]="['/transactions']"
               [queryParams]="{ recipientId: person._id }"

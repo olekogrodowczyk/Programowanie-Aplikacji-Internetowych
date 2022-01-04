@@ -37,6 +37,7 @@
           Osoby
         </a>
         <a
+          *ngIf="checkDepositPermission(['admin', 'manager'])"
           [routerLinkActiveOptions]="{ exact: true }"
           routerLinkActive="is-active"
           routerLink="/transactions"

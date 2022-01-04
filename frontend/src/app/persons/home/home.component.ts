@@ -3,6 +3,7 @@ import { Person, PersonsService } from '../persons.service';
 import { AddPersonFormComponent } from '../add-person-form/add-person-form.component';
 import { EditPersonComponent } from '../edit-person/edit-person.component';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +19,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private personsService: PersonsService,
-    private snackBar: SnackBarService
+    private snackBar: SnackBarService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -72,5 +74,10 @@ export class HomeComponent implements OnInit {
     }
     this.showEditPersonModal = false;
     this.snackBar.openSnackBar(notificationMessage, 'OK');
+    this.ngOnInit();
+  }
+
+  CheckAddPersonPermission(roles: string[]): boolean {
+    return this.authService.checkPermission(roles);
   }
 }
