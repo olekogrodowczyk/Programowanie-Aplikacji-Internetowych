@@ -16,12 +16,16 @@ interface SigninCredentials {
 interface SigninResponse {
   login: string;
   roles: string[];
+  firstName: string;
+  lastName: string;
 }
 
 interface CheckAuthResponse {
   isAuth: boolean;
   roles: string[];
   login: string;
+  firstName: string;
+  lastName: string;
 }
 
 @Injectable({
@@ -42,7 +46,7 @@ export class AuthService {
       .pipe(
         tap((response) => {
           this.signedin$.next(true);
-          this.username$.next(response.login);
+          this.username$.next(response.firstName + ' ' + response.lastName);
           this.roles$.next(response.roles);
         })
       );
@@ -73,7 +77,7 @@ export class AuthService {
         console.log(`Outcome of checkAuth() - ${response}`);
         this.signedin$.next(response.isAuth);
         this.roles$.next(response.roles);
-        this.username$.next(response.login);
+        this.username$.next(response.firstName + ' ' + response.lastName);
       })
     );
   }
