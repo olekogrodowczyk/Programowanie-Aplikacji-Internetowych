@@ -6,6 +6,14 @@ export interface AddProjectCredentials {
   managerId: string;
 }
 
+export interface Project {
+  id: string;
+  name: string;
+  creator: string;
+  manager: string;
+  timeCreation: Date;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -15,5 +23,9 @@ export class ProjectsService {
 
   addProject(credentials: AddProjectCredentials) {
     return this.http.post(`${this.rootUrl}/project`, credentials);
+  }
+
+  getProjects() {
+    return this.http.get<Project[]>(`${this.rootUrl}/project`);
   }
 }

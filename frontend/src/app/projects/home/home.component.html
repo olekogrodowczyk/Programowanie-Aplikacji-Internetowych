@@ -1,7 +1,27 @@
 <div class="box">
-  <button class="button is-link" (click)="showAddProjectModal = true">
+  <button class="button is-link mb-5" (click)="showAddProjectModal = true">
     Dodaj projekt
   </button>
+  <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+    <thead>
+      <th>#</th>
+      <th>Nazwa</th>
+      <th>Twórca</th>
+      <th>Przypisany kierownik</th>
+      <th>Data utworzenia</th>
+      <th>Edycja</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let project of projects; index as i">
+        <th>{{ i + 1 }}</th>
+        <td>{{ project.name }}</td>
+        <td>{{ project.creator }}</td>
+        <td>{{ project.manager }}</td>
+        <td>{{ project.timeCreation | date: "dd.MM.yyyy HH:mm" }}</td>
+        <th><button class="button is-link is-small">Edytuj</button></th>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <app-modal
