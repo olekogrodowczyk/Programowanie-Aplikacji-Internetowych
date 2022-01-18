@@ -11,6 +11,7 @@ const auth = (module.exports = {
           isAuth: isAuthenticated,
           roles: lib.sessions[env.session].roles,
           login: lib.sessions[env.session].login,
+          _id: lib.sessions[env.session]._id,
         });
         break;
       case "POST":
@@ -21,6 +22,7 @@ const auth = (module.exports = {
               lib.sessions[env.session].login = env.payload.login;
               lib.sessions[env.session].roles = doc.roles;
               lib.sessions[env.session].isAuth = true;
+              lib.sessions[env.session]._id = doc._id;
               lib.sendJson(env.res, lib.sessions[env.session]);
             } else {
               lib.sendError(env.res, 401, "authorization failed");
@@ -32,6 +34,7 @@ const auth = (module.exports = {
         delete lib.sessions[env.session].login;
         delete lib.sessions[env.session].roles;
         delete lib.sessions[env.session].isAuth;
+        delete lib.sessions[env.session]._id;
         lib.sendJson(env.res, lib.sessions[env.session]);
         break;
       default:

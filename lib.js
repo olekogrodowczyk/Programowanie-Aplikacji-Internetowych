@@ -19,7 +19,8 @@ const lib = (module.exports = {
   permissions: [
     { req: "POST /register$", roles: [], error: null },
     { req: "^(POST|DELETE|GET|PUT) /auth", roles: [], error: null },
-    { req: "%Post /deposit$", roles: ["admin", "manager"], error: null },
+    { req: "^Post /deposit$", roles: ["admin", "manager"], error: null },
+    { req: " ^(POST|PUT|DELETE) /projects", roles: ["admin"], error: null },
     { req: "^(POST|PUT|DELETE) ", roles: ["admin"], error: null },
     { req: "^POST /transfer$", roles: ["user"], error: null },
     {

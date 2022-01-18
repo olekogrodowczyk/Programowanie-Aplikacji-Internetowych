@@ -105,6 +105,10 @@ server.on("request", function (req, res) {
           break;
         case "/transaction":
           transaction.handle(env);
+          break;
+        case "/project":
+          project.handle(env);
+          break;
         default:
           console.log("Error in requests");
       }
