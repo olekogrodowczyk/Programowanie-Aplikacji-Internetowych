@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-interface AddProjectCredentials {
+export interface AddProjectCredentials {
   name: string;
+  managerId: string;
 }
 
 @Injectable({

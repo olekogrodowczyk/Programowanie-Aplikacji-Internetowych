@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User, UsersService } from 'src/app/users.service';
-import { ProjectsService } from '../projects.service';
+import { ProjectsService, AddProjectCredentials } from '../projects.service';
 
 @Component({
   selector: 'app-add-project-form',
@@ -17,6 +17,7 @@ export class AddProjectFormComponent implements OnInit {
       Validators.minLength(2),
       Validators.maxLength(20),
     ]),
+    manager: new FormControl('', [Validators.required]),
   });
 
   constructor(
@@ -40,8 +41,10 @@ export class AddProjectFormComponent implements OnInit {
     if (this.addProjectForm.invalid) {
       return;
     }
-
-    this.projectsService.addProject(this.addProjectForm.value).subscribe({
+    const managerId: string = this.addProjectForm.controls['manager'].value._id;
+    const name = this.addProjectForm.controls['name'].value;
+    const project: AddProjectCredentials = { managerId: managerId, name: name };
+    this.projectsService.addProject(project).subscribe({
       next: () => {
         this.onAdd.emit(true);
       },

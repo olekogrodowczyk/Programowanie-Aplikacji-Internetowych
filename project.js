@@ -31,7 +31,7 @@ const person = (module.exports = {
       case "POST":
         let project = {};
         project.creator = currentUserId;
-        project.manager = env.payload.managerId;
+        project.manager = db.ObjectId(env.payload.managerId);
         project.name = env.payload.name;
         db.projects.insertOne(project, function (err, result) {
           if (!err) {
