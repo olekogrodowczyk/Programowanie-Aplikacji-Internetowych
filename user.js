@@ -9,7 +9,10 @@ const person = (module.exports = {
       case "GET":
         role = env.urlParsed.query.role;
         console.log(role);
-        const usersByRole = await db.users.find({ roles: role }).toArray();
+        const usersByRole = await db.users
+          .find({ roles: role })
+          .project({ id: 1, login: 1 })
+          .toArray();
         if (usersByRole) {
           lib.sendJson(env.res, usersByRole);
         } else {
