@@ -1,1 +1,21 @@
 <p>home works!</p>
+<button class="button is-link" (click)="showAddProjectModal = true">
+  Dodaj projekt
+</button>
+
+<app-modal
+  [title]="'Dodawanie projektu'"
+  *ngIf="showAddProjectModal"
+  (onClose)="showAddProjectModal = false"
+>
+  <ng-container>
+    <app-add-project-form
+      (onAdd)="onAddProjectSubmit($event)"
+    ></app-add-project-form>
+  </ng-container>
+  <ng-container modalFooter>
+    <button type="submit" form="addPersonForm" class="button is-primary">
+      Dodaj
+    </button>
+  </ng-container>
+</app-modal>

@@ -1,0 +1,15 @@
+<form [formGroup]="addProjectForm" (ngSubmit)="onSubmit()" id="addPersonForm">
+  <div class="field">
+    <p class="control has-icons-left has-icons-right">
+      <input
+        class="input"
+        type="text"
+        placeholder="Nazwa"
+        formControlName="name"
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-user"></i>
+      </span>
+    </p>
+  </div>
+</form>
