@@ -17,7 +17,7 @@
       <select formControlName="manager">
         <option value="" disabled selected hidden>Wybierz kierownika</option>
         <option *ngFor="let manager of managers" [ngValue]="manager">
-          {{ manager.login }}
+          {{ manager.firstName }} {{ manager.lastName }}
         </option>
       </select>
     </div>

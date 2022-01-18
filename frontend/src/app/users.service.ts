@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 export interface User {
   _id: string;
   login: string;
+  firstName: string;
+  lastName: string;
 }
 
 @Injectable({

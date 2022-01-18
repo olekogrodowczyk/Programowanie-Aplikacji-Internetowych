@@ -11,7 +11,7 @@ const person = (module.exports = {
         console.log(role);
         const usersByRole = await db.users
           .find({ roles: role })
-          .project({ id: 1, login: 1 })
+          .project({ id: 1, login: 1, firstName: 1, lastName: 1 })
           .toArray();
         if (usersByRole) {
           lib.sendJson(env.res, usersByRole);
