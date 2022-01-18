@@ -12,6 +12,8 @@ const example = require("./example");
 const deposit = require("./deposit");
 const register = require("./register");
 const transaction = require("./transaction");
+const project = require("./project");
+const contract = require("./contract");
 
 let server = http.createServer();
 
