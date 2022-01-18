@@ -9,7 +9,9 @@ import { Project, ProjectsService } from '../projects.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  projectToEdit: Project = {} as Project;
   showAddProjectModal = false;
+  showEditProjectModal = false;
   projects: Project[] = [];
   constructor(
     private snackBar: SnackBarService,
@@ -43,5 +45,22 @@ export class HomeComponent implements OnInit {
     this.showAddProjectModal = false;
     this.snackBar.openSnackBar(notificationMessage, 'Ok');
     this.ngOnInit();
+  }
+
+  onEditProjectSubmit(value: boolean) {
+    let notificationMessage = '';
+    if (value === true) {
+      notificationMessage = 'Pomyślnie zaktualizowano nowy projekt';
+    } else {
+      notificationMessage = 'Podano błędne dane';
+    }
+    this.showAddProjectModal = false;
+    this.snackBar.openSnackBar(notificationMessage, 'Ok');
+    this.ngOnInit();
+  }
+
+  onEditClick(project: Project) {
+    this.projectToEdit = project;
+    this.showEditProjectModal = true;
   }
 }

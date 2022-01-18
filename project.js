@@ -73,7 +73,29 @@ const person = (module.exports = {
         await sendAllProjects();
         break;
       case "PUT":
-        let _id = db.ObjectId(env.payload._id);
+        _id = db.ObjectId(env.payload._id);
+        if (_id) {
+          let project = await db.projects.findOne({ _id: _id });
+          project.name = env.payload.name;
+          project.manager = db.ObjectId(env.payload.managerId);
+          var result = await db.projects.findOneAndUpdate(
+            { _id },
+            { $set: project },
+            { returnOriginal: false }
+          );
+          if (result) {
+            lib.sendJson(env.res, "Project edited successfully");
+          } else {
+            lib.sendError(env.res, 400, "Error occurred in project editing");
+          }
+        } else {
+          lib.sendError(
+            env.res,
+            400,
+            "broken _id for update " + env.urlParsed.query._id
+          );
+        }
+        break;
       default:
         lib.sendError(env.res, 405, "method not implemented");
     }

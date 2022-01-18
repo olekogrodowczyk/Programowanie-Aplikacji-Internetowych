@@ -18,7 +18,14 @@
         <td>{{ project.creator }}</td>
         <td>{{ project.manager }}</td>
         <td>{{ project.timeCreation | date: "dd.MM.yyyy HH:mm" }}</td>
-        <th><button class="button is-link is-small">Edytuj</button></th>
+        <th>
+          <button
+            (click)="onEditClick(project)"
+            class="button is-link is-small"
+          >
+            Edytuj
+          </button>
+        </th>
       </tr>
     </tbody>
   </table>
@@ -35,8 +42,26 @@
     ></app-add-project-form>
   </ng-container>
   <ng-container modalFooter>
-    <button type="submit" form="addPersonForm" class="button is-primary">
+    <button type="submit" form="addProjectForm" class="button is-primary">
       Dodaj
+    </button>
+  </ng-container>
+</app-modal>
+
+<app-modal
+  [title]="'Edycja projektu'"
+  *ngIf="showEditProjectModal"
+  (onClose)="showEditProjectModal = false"
+>
+  <ng-container>
+    <app-edit-project-form
+      (onEdit)="onEditProjectSubmit($event)"
+      [projectToEdit]="projectToEdit"
+    ></app-edit-project-form>
+  </ng-container>
+  <ng-container modalFooter>
+    <button type="submit" form="editProjectForm" class="button is-primary">
+      Edytuj
     </button>
   </ng-container>
 </app-modal>

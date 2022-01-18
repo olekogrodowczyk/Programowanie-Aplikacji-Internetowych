@@ -6,8 +6,14 @@ export interface AddProjectCredentials {
   managerId: string;
 }
 
+export interface EditProjectCredentials {
+  _id: string;
+  name: string;
+  managerId: string;
+}
+
 export interface Project {
-  id: string;
+  _id: string;
   name: string;
   creator: string;
   manager: string;
@@ -23,6 +29,10 @@ export class ProjectsService {
 
   addProject(credentials: AddProjectCredentials) {
     return this.http.post(`${this.rootUrl}/project`, credentials);
+  }
+
+  editProject(credentials: AddProjectCredentials) {
+    return this.http.put(`${this.rootUrl}/project`, credentials);
   }
 
   getProjects() {
