@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { User, UsersService } from 'src/app/users.service';
 import { ProjectsService } from '../projects.service';
 
 @Component({
@@ -8,8 +9,7 @@ import { ProjectsService } from '../projects.service';
   styleUrls: ['./add-project-form.component.css'],
 })
 export class AddProjectFormComponent implements OnInit {
-  constructor(private projectsService: ProjectsService) {}
-
+  managers: User[] = [];
   @Output() onAdd = new EventEmitter<boolean>();
   addProjectForm = new FormGroup({
     name: new FormControl('', [
@@ -19,7 +19,22 @@ export class AddProjectFormComponent implements OnInit {
     ]),
   });
 
-  ngOnInit(): void {}
+  constructor(
+    private projectsService: ProjectsService,
+    private usersService: UsersService
+  ) {}
+
+  ngOnInit(): void {
+    this.usersService.getUsersByRole('manager').subscribe({
+      next: (value) => {
+        this.managers = value;
+        console.log(this.managers);
+      },
+      error: () => {
+        console.log('Error caught!');
+      },
+    });
+  }
 
   onSubmit() {
     if (this.addProjectForm.invalid) {

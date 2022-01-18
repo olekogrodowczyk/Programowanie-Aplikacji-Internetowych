@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
+import { UsersService } from 'src/app/users.service';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,11 @@ import { SnackBarService } from 'src/app/shared/snack-bar.service';
 })
 export class HomeComponent implements OnInit {
   showAddProjectModal = false;
-  constructor(private snackBar: SnackBarService) {}
+
+  constructor(
+    private snackBar: SnackBarService,
+    private usersService: UsersService
+  ) {}
 
   ngOnInit(): void {}
 
