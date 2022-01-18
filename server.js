@@ -14,6 +14,7 @@ const register = require("./register");
 const transaction = require("./transaction");
 const project = require("./project");
 const contract = require("./contract");
+const user = require("./user");
 
 let server = http.createServer();
 
@@ -108,6 +109,9 @@ server.on("request", function (req, res) {
           break;
         case "/project":
           project.handle(env);
+          break;
+        case "/user":
+          user.handle(env);
           break;
         default:
           console.log("Error in requests");
