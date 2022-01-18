@@ -37,13 +37,22 @@
           Osoby
         </a>
         <a
-          *ngIf="checkDepositPermission(['admin', 'manager'])"
+          *ngIf="checkPermissions(['admin', 'manager'])"
           [routerLinkActiveOptions]="{ exact: true }"
           routerLinkActive="is-active"
           routerLink="/transactions"
           class="navbar-item"
         >
           Transakcje
+        </a>
+        <a
+          *ngIf="checkPermissions(['admin', 'manager'])"
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLinkActive="is-active"
+          routerLink="/projects"
+          class="navbar-item"
+        >
+          Projekty
         </a>
       </ng-container>
     </div>

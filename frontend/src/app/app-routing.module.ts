@@ -21,6 +21,12 @@ const routes: Routes = [
         (mod) => mod.TransactionsModule
       ),
   },
+  {
+    path: 'projects',
+    canLoad: [AuthGuard],
+    loadChildren: () =>
+      import('./projects/projects.module').then((mod) => mod.ProjectsModule),
+  },
 ];
 
 @NgModule({

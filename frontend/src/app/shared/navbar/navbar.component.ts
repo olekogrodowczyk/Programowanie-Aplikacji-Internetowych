@@ -73,7 +73,7 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  checkDepositPermission(roles: string[]): boolean {
+  checkPermissions(roles: string[]): boolean {
     return this.authService.checkPermission(roles);
   }
 }
