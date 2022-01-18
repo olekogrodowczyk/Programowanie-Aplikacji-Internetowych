@@ -12,6 +12,8 @@ const register = (module.exports = {
       let userToAdd = {
         login: credentials.login,
         password: credentials.password,
+        firstName: credentials.firstName,
+        lastName: credentials.lastName,
         roles: ["user"],
       };
       return credentials.password === credentials.passwordConfirm
