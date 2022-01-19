@@ -27,6 +27,12 @@ const routes: Routes = [
     loadChildren: () =>
       import('./projects/projects.module').then((mod) => mod.ProjectsModule),
   },
+  {
+    path: 'contracts',
+    canLoad: [AuthGuard],
+    loadChildren: () =>
+    import('./contracts/contracts.module').then((modl)=> modl.ContractsModule)
+  }
 ];
 
 @NgModule({
