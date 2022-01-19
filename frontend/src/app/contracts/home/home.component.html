@@ -1,6 +1,40 @@
-<button class="button is-link" (click)="showAddContractModal = true">
-  Dodaj umowę
-</button>
+<div class="box">
+  <button class="button is-link mb-5" (click)="showAddContractModal = true">
+    Dodaj umowę
+  </button>
+  <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+    <thead>
+      <th>#</th>
+      <th>Nazwa</th>
+      <th>Wykonawca</th>
+      <th>Wynagrodzenie</th>
+      <th>Projekt</th>
+      <th>Kierownik</th>
+      <th>Data rozpoczęcia</th>
+      <th>Data zakończenia</th>
+      <th>Data utworzenia</th>
+      <th>Rozliczenie</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let contract of contracts; index as i">
+        <th>{{ i + 1 }}</th>
+        <td>{{ contract.name }}</td>
+        <td>{{ contract.contractor }}</td>
+        <td>{{ contract.payment | currency: "PLN":"symbol" }}</td>
+        <td>{{ contract.project }}</td>
+        <td>{{ contract.creator }}</td>
+        <td>{{ contract.startTime | date: "dd.MM.yyyy" }}</td>
+        <td>{{ contract.endTime | date: "dd.MM.yyyy" }}</td>
+        <td>{{ contract.creationTime | date: "dd.MM.yyyy HH:mm" }}</td>
+        <!-- <th>
+          <button (click)="payOff(contract)" class="button is-link is-small">
+            Edytuj
+          </button>
+        </th> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <app-modal
   [title]="'Dodawanie umowy'"

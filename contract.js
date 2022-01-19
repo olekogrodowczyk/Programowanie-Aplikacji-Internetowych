@@ -65,7 +65,39 @@ const contract = (module.exports = {
       };
     };
 
-    sendAllContracts = async () => {};
+    const sendAllProjects = async (q = "") => {
+      await db.contracts.find({}).toArray(async function (err, contracts) {
+        if (!err) {
+          let newArray = await Promise.all(
+            contracts.map(async function (contract) {
+              const project = await db.projects.findOne({
+                _id: contract.project,
+              });
+              const creator = await db.users.findOne({
+                _id: contract.creator,
+              });
+              const contractor = await db.persons.findOne({
+                _id: contract.contractor,
+              });
+              return {
+                _id: contract._id,
+                name: contract.name,
+                payment: contract.payment,
+                creationTime: contract.creationTime,
+                creator: creator.firstName + " " + creator.lastName,
+                contractor: contractor.firstName + " " + contractor.lastName,
+                project: project.name,
+                startTime: contract.startTime,
+                endTime: contract.endTime,
+              };
+            })
+          );
+          lib.sendJson(env.res, newArray);
+        } else {
+          lib.sendError(env.res, 400, "persons.aggregate() failed " + err);
+        }
+      });
+    };
 
     switch (env.req.method) {
       case "POST":
@@ -81,6 +113,9 @@ const contract = (module.exports = {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");
           }
         });
+        break;
+      case "GET":
+        await sendAllProjects();
         break;
       default:
         lib.sendError(env.res, 405, "method not implemented");

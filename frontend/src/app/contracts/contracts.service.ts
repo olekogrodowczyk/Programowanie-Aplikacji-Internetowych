@@ -10,6 +10,18 @@ export interface AddContractCredentials {
   endTime: number;
 }
 
+export interface Contract {
+  _id: string;
+  name: string;
+  payment: number;
+  creationTime: string;
+  creator: string;
+  contractor: string;
+  project: string;
+  startTime: string;
+  endTime: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -19,5 +31,9 @@ export class ContractsService {
 
   addContract(value: AddContractCredentials) {
     return this.http.post(`${this.rootUrl}/contract`, value);
+  }
+
+  getContracts() {
+    return this.http.get<Contract[]>(`${this.rootUrl}/contract`);
   }
 }

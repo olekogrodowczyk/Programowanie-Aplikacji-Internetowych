@@ -28,10 +28,10 @@ const project = (module.exports = {
     }
 
     const sendAllProjects = async (q = "") => {
-      await db.projects.find({}).toArray(async function (err, transactions) {
+      await db.projects.find({}).toArray(async function (err, projects) {
         if (!err) {
           let newArray = await Promise.all(
-            transactions.map(async function (project) {
+            projects.map(async function (project) {
               const manager = await db.users.findOne({
                 _id: project.manager,
               });
