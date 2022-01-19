@@ -1,0 +1,77 @@
+<form
+  [formGroup]="addContractForm"
+  (ngSubmit)="onSubmit()"
+  id="addContractForm"
+>
+  <div class="field">
+    <p class="control has-icons-left has-icons-right">
+      <input
+        class="input"
+        type="number"
+        placeholder="Wynagrodzenie"
+        formControlName="payment"
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-money-bill"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select is-fullwidth">
+        <select formControlName="project">
+          <option value="" disabled selected hidden>Wybierz projekt</option>
+          <option *ngFor="let project of projects" [ngValue]="project">
+            {{ project.name }}
+          </option>
+        </select>
+      </div>
+      <div class="icon is-small is-left">
+        <i class="fas fa-project-diagram"></i>
+      </div>
+    </div>
+  </div>
+  <div class="field mb-5">
+    <div class="control has-icons-left">
+      <div class="select is-fullwidth">
+        <select formControlName="person">
+          <option value="" disabled selected hidden>Wybierz wykonawcę</option>
+          <option *ngFor="let person of persons" [ngValue]="person">
+            {{ person.firstName }} {{ person.lastName }}
+          </option>
+        </select>
+      </div>
+      <div class="icon is-small is-left">
+        <i class="fas fa-user"></i>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label>Data rozpoczęcia</label>
+    <p class="control has-icons-left has-icons-right">
+      <input
+        class="input"
+        type="date"
+        placeholder="Data rozpoczęcia"
+        formControlName="startTime"
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-table"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field mt-25">
+    <label>Data zakończenia</label>
+    <p class="control has-icons-left has-icons-right">
+      <input
+        class="input"
+        type="date"
+        placeholder="Data zakończenia"
+        formControlName="endTime"
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-table"></i>
+      </span>
+    </p>
+  </div>
+</form>

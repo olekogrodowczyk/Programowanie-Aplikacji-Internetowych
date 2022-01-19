@@ -1,1 +1,20 @@
-<p>home works!</p>
+<button class="button is-link" (click)="showAddContractModal = true">
+  Dodaj umowę
+</button>
+
+<app-modal
+  [title]="'Dodawanie umowy'"
+  *ngIf="showAddContractModal"
+  (onClose)="showAddContractModal = false"
+>
+  <ng-container>
+    <app-add-contract-form
+      (onAdd)="onAddContractSubmit($event)"
+    ></app-add-contract-form>
+  </ng-container>
+  <ng-container modalFooter>
+    <button type="submit" form="addPersonForm" class="button is-primary">
+      Dodaj
+    </button>
+  </ng-container>
+</app-modal>

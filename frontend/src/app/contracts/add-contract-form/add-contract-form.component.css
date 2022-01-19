@@ -1,0 +1,4 @@
+.control.has-icons-right .input,
+.control.has-icons-right .select select {
+  padding-right: 0.5em;
+}
