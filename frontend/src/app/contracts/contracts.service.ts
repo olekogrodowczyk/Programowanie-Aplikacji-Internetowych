@@ -20,6 +20,7 @@ export interface Contract {
   project: string;
   startTime: string;
   endTime: string;
+  commited: boolean;
 }
 
 @Injectable({
@@ -35,5 +36,12 @@ export class ContractsService {
 
   getContracts() {
     return this.http.get<Contract[]>(`${this.rootUrl}/contract`);
+  }
+
+  payOff(contractId: string) {
+    return this.http.put(
+      `${this.rootUrl}/contract?contractId=${contractId}`,
+      null
+    );
   }
 }

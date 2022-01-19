@@ -13,7 +13,7 @@
       <th>Data rozpoczęcia</th>
       <th>Data zakończenia</th>
       <th>Data utworzenia</th>
-      <th>Rozliczenie</th>
+      <th>Stan</th>
     </thead>
     <tbody>
       <tr *ngFor="let contract of contracts; index as i">
@@ -25,12 +25,19 @@
         <td>{{ contract.creator }}</td>
         <td>{{ contract.startTime | date: "dd.MM.yyyy" }}</td>
         <td>{{ contract.endTime | date: "dd.MM.yyyy" }}</td>
-        <td>{{ contract.creationTime | date: "dd.MM.yyyy HH:mm" }}</td>
-        <!-- <th>
-          <button (click)="payOff(contract)" class="button is-link is-small">
-            Edytuj
+        <td>{{ contract.creationTime | date: "dd.MM.yyyy" }}</td>
+        <th>
+          <button
+            *ngIf="!contract.commited"
+            (click)="payOff(contract._id)"
+            class="button is-link is-small"
+          >
+            Rozlicz
           </button>
-        </th> -->
+          <p style="font-weight: normal" *ngIf="contract.commited">
+            Rozliczone
+          </p>
+        </th>
       </tr>
     </tbody>
   </table>

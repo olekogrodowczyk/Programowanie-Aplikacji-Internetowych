@@ -62,10 +62,11 @@ const contract = (module.exports = {
         creator: db.ObjectId(lib.sessions[env.session]._id),
         contractor: db.ObjectId(contractor),
         creationTime: Date.now(),
+        commited: false,
       };
     };
 
-    const sendAllProjects = async (q = "") => {
+    const sendAllContracts = async (q = "") => {
       await db.contracts.find({}).toArray(async function (err, contracts) {
         if (!err) {
           let newArray = await Promise.all(
@@ -89,6 +90,7 @@ const contract = (module.exports = {
                 project: project.name,
                 startTime: contract.startTime,
                 endTime: contract.endTime,
+                commited: contract.commited,
               };
             })
           );
@@ -115,7 +117,30 @@ const contract = (module.exports = {
         });
         break;
       case "GET":
-        await sendAllProjects();
+        await sendAllContracts();
+        break;
+      case "PUT":
+        contractId = db.ObjectId(env.urlParsed.query.contractId);
+        if (contractId) {
+          let contract = await db.contracts.findOne({ _id: contractId });
+          contract.commited = true;
+          var result = await db.contracts.findOneAndUpdate(
+            { _id: contractId },
+            { $set: contract },
+            { returnOriginal: false }
+          );
+          if (result) {
+            lib.sendJson(env.res, "Contract edited successfully");
+          } else {
+            lib.sendError(env.res, 400, "Error occurred in contract editing");
+          }
+        } else {
+          lib.sendError(
+            env.res,
+            400,
+            "broken _id for update " + env.urlParsed.query._id
+          );
+        }
         break;
       default:
         lib.sendError(env.res, 405, "method not implemented");

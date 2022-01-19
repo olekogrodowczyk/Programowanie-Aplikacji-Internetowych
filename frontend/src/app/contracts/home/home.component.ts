@@ -33,6 +33,21 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  payOff(contractId: string) {
+    this.contractsService.payOff(contractId).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Pomyślnie rozliczono umowę', 'OK');
+        this.ngOnInit();
+      },
+      error: ({ cause }) => {
+        this.snackBar.openSnackBar(
+          'Wystąpił błąd podczas rozliczania umowy',
+          'OK'
+        );
+      },
+    });
+  }
+
   onAddContractSubmit(value: boolean) {
     let notificationMessage = '';
     if (value === true) {
