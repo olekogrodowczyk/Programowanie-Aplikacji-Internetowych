@@ -30,12 +30,12 @@
     <tbody>
       <tr *ngFor="let person of persons; index as i">
         <ng-container *ngIf="afterFiltered(person.firstName, person.lastName)">
-          <td>{{ i + 1 }}</td>
+          <th>{{ i + 1 }}</th>
           <td>{{ person.firstName }}</td>
           <td>{{ person.lastName }}</td>
           <td>{{ person.year }}</td>
           <td>{{ person.transactions }}</td>
-          <td>{{ person.balance }}</td>
+          <td>{{ person.balance | currency: "PLN":"symbol" }}</td>
           <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
             <button
               (click)="onEditClick(person)"

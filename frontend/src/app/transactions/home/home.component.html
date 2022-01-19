@@ -31,7 +31,7 @@
             <ng-container *ngIf="afterFiltered(transaction.recipientName)">
               <th>{{ i + 1 }}</th>
               <td>{{ transaction.recipientName }}</td>
-              <td>{{ transaction.amount }}</td>
+              <td>{{ transaction.amount | currency: "PLN":"symbol" }}</td>
               <td>{{ transaction.when | date: "dd.MM.yyyy HH:mm" }}</td>
             </ng-container>
           </tr>
