@@ -1,7 +1,7 @@
 <form [formGroup]="depositForm" (ngSubmit)="onSubmit()">
   <div class="field">
     <div class="select is-multiple is-size-6 is-fullwidth">
-      <select multiple size="8" formControlName="recipient">
+      <select multiple size="12" formControlName="recipient">
         <option *ngFor="let person of persons" [ngValue]="person">
           {{ person.firstName + " " + person.lastName }}
         </option>

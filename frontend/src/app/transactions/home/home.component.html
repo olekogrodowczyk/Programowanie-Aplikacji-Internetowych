@@ -6,7 +6,7 @@
         (isDone)="refresh($event)"
       ></app-deposit-form>
     </div>
-    <div class="column is-6 is-offset-2">
+    <div class="column is-8">
       <input
         *ngIf="!recipientId"
         [value]="filterPersonValue"
@@ -29,7 +29,7 @@
         <tbody>
           <tr *ngFor="let transaction of transactions; let i = index">
             <ng-container *ngIf="afterFiltered(transaction.recipientName)">
-              <td>{{ i + 1 }}</td>
+              <th>{{ i + 1 }}</th>
               <td>{{ transaction.recipientName }}</td>
               <td>{{ transaction.amount }}</td>
               <td>{{ transaction.when | date: "dd.MM.yyyy HH:mm" }}</td>
