@@ -54,6 +54,15 @@
         >
           Projekty
         </a>
+        <a
+          *ngIf="checkPermissions(['manager'])"
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLinkActive="is-active"
+          routerLink="/contracts"
+          class="navbar-item"
+        >
+          Umowy
+        </a>
       </ng-container>
     </div>
 
