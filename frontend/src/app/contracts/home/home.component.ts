@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
   onAddContractSubmit(value: boolean) {
     let notificationMessage = '';
     if (value === true) {
-      notificationMessage = 'Pomyślnie dodano osobę';
+      notificationMessage = 'Pomyślnie dodano nową umowę';
     } else {
       notificationMessage = 'Podano błędne dane';
     }
