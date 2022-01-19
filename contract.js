@@ -1,7 +1,7 @@
 const db = require("./db");
 const lib = require("./lib");
 
-const person = (module.exports = {
+const contract = (module.exports = {
   handle: async function (env) {
     let q = env.urlParsed.query.q ? env.urlParsed.query.q : "";
     let project = {};
@@ -64,6 +64,8 @@ const person = (module.exports = {
         creationTime: Date.now(),
       };
     };
+
+    sendAllContracts = async () => {};
 
     switch (env.req.method) {
       case "POST":

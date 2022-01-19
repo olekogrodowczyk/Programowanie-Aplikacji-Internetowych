@@ -1,7 +1,7 @@
 const db = require("./db");
 const lib = require("./lib");
 
-const person = (module.exports = {
+const project = (module.exports = {
   handle: async function (env) {
     let q = env.urlParsed.query.q ? env.urlParsed.query.q : "";
     let currentUserId = lib.sessions[env.session]._id;

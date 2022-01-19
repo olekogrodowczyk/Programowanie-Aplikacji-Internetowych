@@ -1,7 +1,7 @@
 const db = require("./db");
 const lib = require("./lib");
 
-const person = (module.exports = {
+const user = (module.exports = {
   handle: async function (env) {
     let q = env.urlParsed.query.q ? env.urlParsed.query.q : "";
 
