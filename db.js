@@ -27,6 +27,7 @@ const db = (module.exports = {
         db.transactions = conn.collection("transactions");
         db.users = conn.collection("users");
         db.projects = conn.collection("projects");
+        db.contracts = conn.collection("contracts");
         nextTick();
       }
     );

@@ -113,6 +113,9 @@ server.on("request", function (req, res) {
         case "/user":
           user.handle(env);
           break;
+        case "/contract":
+          contract.handle(env);
+          break;
         default:
           console.log("Error in requests");
       }

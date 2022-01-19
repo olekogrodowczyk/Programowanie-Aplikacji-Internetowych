@@ -7,14 +7,15 @@ const auth = (module.exports = {
       case "GET":
         console.log(`Authenticated - ${lib.sessions[env.session].isAuth}`);
         let isAuthenticated = lib.sessions[env.session].isAuth;
-        lib.sendJson(env.res, {
+        let response = {
           isAuth: isAuthenticated,
           roles: lib.sessions[env.session].roles,
           login: lib.sessions[env.session].login,
           _id: lib.sessions[env.session]._id,
-          firstName: lib.sessions[env.session].firstName,
-          lastName: lib.sessions[env.session].lastName,
-        });
+          firstName: lib.sessions[env.session].firstName || "",
+          lastName: lib.sessions[env.session].lastName || "",
+        };
+        lib.sendJson(env.res);
         break;
       case "POST":
         db.users.findOne(
