@@ -41,7 +41,9 @@
         </th>
         <th>
           <button
-            (click)="onDeleteClick(contract._id)"
+            (click)="
+              showDeleteContractModal = true; contractIdToDelete = contract._id
+            "
             class="button is-link is-small"
           >
             Usuń
@@ -65,6 +67,26 @@
   <ng-container modalFooter>
     <button type="submit" form="addContractForm" class="button is-primary">
       Dodaj
+    </button>
+  </ng-container>
+</app-modal>
+
+<app-modal
+  [title]="'Usuwanie umowy'"
+  *ngIf="showDeleteContractModal"
+  (onClose)="showDeleteContractModal = false"
+>
+  <ng-container>
+    <h1>Czy jesteś pewien?</h1>
+  </ng-container>
+  <ng-container modalFooter>
+    <button
+      type="submit"
+      form="editProjectForm"
+      (click)="onDeleteClick(contractIdToDelete)"
+      class="button is-primary"
+    >
+      Tak
     </button>
   </ng-container>
 </app-modal>

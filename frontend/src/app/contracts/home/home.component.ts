@@ -9,7 +9,9 @@ import { ContractsService, Contract } from '../contracts.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  contractIdToDelete!: string;
   showAddContractModal = false;
+  showDeleteContractModal = false;
 
   constructor(
     private snackBar: SnackBarService,
@@ -76,6 +78,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.snackBar.openSnackBar('Nie udało się usunąć umowy', 'OK');
       },
     });
+    this.showDeleteContractModal = false;
     this.ngOnInit();
   }
 }

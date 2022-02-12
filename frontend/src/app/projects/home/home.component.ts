@@ -11,8 +11,10 @@ import { Project, ProjectsService } from '../projects.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   projectToEdit: Project = {} as Project;
+  projectIdToDelete!: string;
   showAddProjectModal = false;
   showEditProjectModal = false;
+  showDeleteProjectModal = false;
 
   constructor(
     private snackBar: SnackBarService,
@@ -83,5 +85,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
     });
     this.ngOnInit();
+    this.showDeleteProjectModal = false;
   }
 }

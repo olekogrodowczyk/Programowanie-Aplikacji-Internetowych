@@ -44,8 +44,10 @@
               Edytuj
             </button>
             <button
-              (click)="onDeleteClick(person._id)"
               class="button is-link is-small table-button"
+              (click)="
+                showDeleteProjectModal = true; personIdToDelete = person._id
+              "
             >
               Usuń
             </button>
@@ -96,6 +98,30 @@
   <ng-container modalFooter>
     <button type="submit" form="editPersonForm" class="button is-primary">
       Edytuj
+    </button>
+  </ng-container>
+</app-modal>
+
+<app-modal
+  [title]="'Usuwanie osoby'"
+  *ngIf="showDeleteProjectModal"
+  (onClose)="showDeleteProjectModal = false"
+>
+  <ng-container>
+    <h1>Czy jesteś pewien?</h1>
+    <h4>
+      Usunięcie osoby sprawi również usunięcie powiązanych z nią transakcji oraz
+      umów
+    </h4>
+  </ng-container>
+  <ng-container modalFooter>
+    <button
+      type="submit"
+      form="editProjectForm"
+      (click)="onDeleteClick(personIdToDelete)"
+      class="button is-primary"
+    >
+      Tak
     </button>
   </ng-container>
 </app-modal>

@@ -168,6 +168,7 @@ const contract = (module.exports = {
             "broken _id for delete " + env.urlParsed.query._id
           );
         }
+        break;
       default:
         lib.sendError(env.res, 405, "method not implemented");
     }

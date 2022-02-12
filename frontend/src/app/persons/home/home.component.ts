@@ -14,8 +14,10 @@ import { WebsocketService } from 'src/app/websocket.service';
 export class HomeComponent implements OnInit, OnDestroy {
   filterValue: string = '';
   personToEdit: Person = {} as Person;
+  personIdToDelete!: string;
   showAddPersonModal = false;
   showEditPersonModal = false;
+  showDeleteProjectModal = false;
 
   constructor(
     public personsService: PersonsService,
@@ -49,6 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.snackBar.openSnackBar('Nie udało się usunąć osoby', 'OK');
       },
     });
+    this.showDeleteProjectModal = false;
     this.ngOnInit();
   }
 
