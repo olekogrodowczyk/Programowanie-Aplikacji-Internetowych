@@ -4,6 +4,14 @@
 }
 
 .footer {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px;
   padding-top: 10px;
+  z-index: 1;
+  text-align: center;
   background-color: #283593;
 }

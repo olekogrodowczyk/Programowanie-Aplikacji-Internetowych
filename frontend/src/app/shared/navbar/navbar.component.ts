@@ -12,6 +12,7 @@ import { SnackBarService } from '../snack-bar.service';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
+  isActive = false;
   showLoginModal = false;
   showRegisterModal = false;
   signedIn$: BehaviorSubject<boolean>;
@@ -29,6 +30,12 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.signedIn$);
+  }
+
+  changeIsActive() {
+    console.log(this.isActive);
+
+    this.isActive = this.isActive ? false : true;
   }
 
   selectItem() {

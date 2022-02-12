@@ -5,6 +5,7 @@
     </a>
 
     <a
+      (click)="changeIsActive()"
       role="button"
       class="navbar-burger"
       aria-label="menu"
@@ -17,7 +18,11 @@
     </a>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu">
+  <div
+    id="navbarBasicExample"
+    [ngClass]="{ 'is-active': isActive }"
+    class="navbar-menu is-active"
+  >
     <div class="navbar-start">
       <ng-container *ngIf="signedIn$ | async">
         <a
