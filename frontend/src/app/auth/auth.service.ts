@@ -77,7 +77,9 @@ export class AuthService {
         console.log(`Outcome of checkAuth() - ${response}`);
         this.signedin$.next(response.isAuth);
         this.roles$.next(response.roles);
-        this.username$.next(response.firstName + ' ' + response.lastName);
+        this.username$.next(
+          (response.firstName + ' ' + response.lastName).trim()
+        );
       })
     );
   }
