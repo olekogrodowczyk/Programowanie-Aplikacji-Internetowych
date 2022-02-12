@@ -61,9 +61,17 @@ const project = (module.exports = {
         project.manager = db.ObjectId(env.payload.managerId);
         project.name = env.payload.name;
         project.timeCreation = Date.now();
-        db.projects.insertOne(project, function (err, result) {
+        db.projects.insertOne(project, async function (err, result) {
           if (!err) {
             lib.sendJson(env.res, result);
+            let creator = await db.users.findOne({ _id: currentUserId });
+            let manager = await db.users.findOne({
+              _id: db.ObjectId(env.payload.managerId),
+            });
+            project.creator = creator.firstName + " " + creator.lastName;
+            project.manager = manager.firstName + " " + creator.lastName;
+            project.type = "project";
+            lib.broadcast(project);
           } else {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");
           }

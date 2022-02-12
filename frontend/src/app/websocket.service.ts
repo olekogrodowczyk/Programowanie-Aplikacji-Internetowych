@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
+import { Project, ProjectsService } from './projects/projects.service';
 import {
   DepositRequest,
   TransactionResponse,
@@ -13,7 +14,10 @@ export class WebsocketService {
   webSocket!: WebSocket;
   data: any;
 
-  constructor(private transationsService: TransactionsService) {}
+  constructor(
+    private transationsService: TransactionsService,
+    private projectsService: ProjectsService
+  ) {}
 
   public openWebSocket() {
     this.webSocket = new WebSocket('ws://localhost:7777');
@@ -31,12 +35,13 @@ export class WebsocketService {
             data as TransactionResponse
           );
           break;
+        case 'project':
+          this.projectsService.projects.push(data as Project);
+          break;
         default:
           console.log('Unrecognized web socket message');
           break;
       }
-      console.log('Data:');
-      console.log(data);
     };
 
     this.webSocket.onclose = (event) => {

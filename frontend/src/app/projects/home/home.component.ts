@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import { UsersService } from 'src/app/users.service';
+import { WebsocketService } from 'src/app/websocket.service';
 import { Project, ProjectsService } from '../projects.service';
 
 @Component({
@@ -8,26 +9,31 @@ import { Project, ProjectsService } from '../projects.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   projectToEdit: Project = {} as Project;
   showAddProjectModal = false;
   showEditProjectModal = false;
-  projects: Project[] = [];
+
   constructor(
     private snackBar: SnackBarService,
     private usersService: UsersService,
-    private projectsService: ProjectsService
+    public projectsService: ProjectsService,
+    private webSocketService: WebsocketService
   ) {}
 
+  ngOnDestroy(): void {
+    this.webSocketService.closeWebSocket();
+  }
+
   ngOnInit(): void {
+    this.webSocketService.openWebSocket();
     this.getProjects();
   }
 
   getProjects() {
     this.projectsService.getProjects().subscribe({
       next: (value) => {
-        this.projects = value;
-        console.log(this.projects);
+        this.projectsService.projects = value;
       },
       error: () => {
         console.log('Error caught!');
