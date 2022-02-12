@@ -2,7 +2,7 @@
   min-width: 60vw;
 }
 
-tbody {
+table {
   display: block;
   height: 380px;
   overflow: auto;
@@ -13,11 +13,7 @@ tbody tr {
   width: 100%;
   table-layout: fixed; /* even columns width , fix width of table too*/
 }
-thead {
-  width: calc(
-    100% - 1em
-  ); /* scrollbar is average 1em/16px width, remove it from thead width */
-}
+
 table {
   width: 400px;
 }
