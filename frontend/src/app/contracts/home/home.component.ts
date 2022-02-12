@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
+import { WebsocketService } from 'src/app/websocket.service';
 import { ContractsService, Contract } from '../contracts.service';
 
 @Component({
@@ -7,22 +8,28 @@ import { ContractsService, Contract } from '../contracts.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   showAddContractModal = false;
-  contracts: Contract[] = [];
+
   constructor(
     private snackBar: SnackBarService,
-    private contractsService: ContractsService
+    public contractsService: ContractsService,
+    private webSocketService: WebsocketService
   ) {}
 
+  ngOnDestroy(): void {
+    this.webSocketService.closeWebSocket();
+  }
+
   ngOnInit(): void {
+    this.webSocketService.openWebSocket();
     this.getContracts();
   }
 
   getContracts() {
     this.contractsService.getContracts().subscribe({
       next: (value) => {
-        this.contracts = value;
+        this.contractsService.contracts = value;
       },
       error: ({ cause }) => {
         this.snackBar.openSnackBar(

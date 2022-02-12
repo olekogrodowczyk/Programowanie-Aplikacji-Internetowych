@@ -108,9 +108,19 @@ const contract = (module.exports = {
           lib.sendError(env.res, 400, "Invalid payload");
           return;
         }
-        db.contracts.insertOne(contract, function (err, result) {
+        db.contracts.insertOne(contract, async function (err, result) {
           if (!err) {
             lib.sendJson(env.res, result);
+            let creator = await db.users.findOne({ _id: contract.creator });
+            let project = await db.projects.findOne({ _id: contract.project });
+            let contractor = await db.persons.findOne({
+              _id: contract.contractor,
+            });
+            contract.creator = creator.firstName + " " + creator.lastName;
+            contract.project = project.name;
+            contract.contractor = contract.firstName + " " + contract.lastName;
+            contract.type = "contract";
+            lib.broadcast(contract);
           } else {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");
           }

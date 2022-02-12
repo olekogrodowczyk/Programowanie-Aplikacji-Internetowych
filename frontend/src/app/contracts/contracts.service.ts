@@ -27,6 +27,7 @@ export interface Contract {
   providedIn: 'root',
 })
 export class ContractsService {
+  contracts!: Contract[];
   rootUrl = 'http://localhost:7777';
   constructor(private http: HttpClient) {}
 

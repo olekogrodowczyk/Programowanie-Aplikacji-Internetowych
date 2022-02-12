@@ -16,7 +16,7 @@
       <th>Stan</th>
     </thead>
     <tbody>
-      <tr *ngFor="let contract of contracts; index as i">
+      <tr *ngFor="let contract of contractsService.contracts; index as i">
         <th>{{ i + 1 }}</th>
         <td>{{ contract.name }}</td>
         <td>{{ contract.contractor }}</td>
