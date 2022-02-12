@@ -28,6 +28,7 @@ export interface editPersonCredentials {
   providedIn: 'root',
 })
 export class PersonsService {
+  persons!: Person[];
   rootUrl = 'http://localhost:7777';
   constructor(private http: HttpClient) {}
 

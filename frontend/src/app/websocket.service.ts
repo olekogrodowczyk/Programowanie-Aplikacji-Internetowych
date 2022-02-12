@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { Contract, ContractsService } from './contracts/contracts.service';
+import { Person, PersonsService } from './persons/persons.service';
 import { Project, ProjectsService } from './projects/projects.service';
 import {
   DepositRequest,
@@ -18,7 +19,8 @@ export class WebsocketService {
   constructor(
     private transationsService: TransactionsService,
     private projectsService: ProjectsService,
-    private contractsService: ContractsService
+    private contractsService: ContractsService,
+    private personsService: PersonsService
   ) {}
 
   public openWebSocket() {
@@ -42,6 +44,9 @@ export class WebsocketService {
           break;
         case 'contract':
           this.contractsService.contracts.push(data as Contract);
+          break;
+        case 'person':
+          this.personsService.persons.push(data as Person);
           break;
         default:
           console.log('Unrecognized web socket message');

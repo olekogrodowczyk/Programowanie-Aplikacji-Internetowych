@@ -1,32 +1,38 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Person, PersonsService } from '../persons.service';
 import { AddPersonFormComponent } from '../add-person-form/add-person-form.component';
 import { EditPersonComponent } from '../edit-person/edit-person.component';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { WebsocketService } from 'src/app/websocket.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   filterValue: string = '';
-  persons: Person[] = [];
   personToEdit: Person = {} as Person;
   showAddPersonModal = false;
   showEditPersonModal = false;
 
   constructor(
-    private personsService: PersonsService,
+    public personsService: PersonsService,
     private snackBar: SnackBarService,
-    private authService: AuthService
+    private authService: AuthService,
+    private webSocketService: WebsocketService
   ) {}
 
+  ngOnDestroy(): void {
+    this.webSocketService.closeWebSocket();
+  }
+
   ngOnInit(): void {
+    this.webSocketService.openWebSocket();
     this.personsService.getPersons().subscribe({
       next: (response) => {
-        this.persons = response;
+        this.personsService.persons = response;
       },
       error: () => {
         console.log('Error caught!');

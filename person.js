@@ -1,6 +1,6 @@
-const db = require('./db')
-const lib = require('./lib')
-
+const db = require("./db");
+const lib = require("./lib");
+//prettier-ignore
 const person = module.exports = {
 
     handle: function(env) {
@@ -54,9 +54,13 @@ const person = module.exports = {
                 }
                 break
             case 'POST':
-                db.persons.insertOne(person, function(err, result) {
+                db.persons.insertOne(person, async function(err, result) {
                     if(!err) {
                         sendAllPersons(q)
+                        person.transactions = 0;
+                        person.balance = 0;
+                        person.type = 'person';
+                        lib.broadcast(person);
                     } else {
                         lib.sendError(env.res, 400, 'persons.insertOne() failed')
                     }

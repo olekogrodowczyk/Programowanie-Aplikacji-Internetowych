@@ -28,7 +28,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let person of persons; index as i">
+      <tr *ngFor="let person of personsService.persons; index as i">
         <ng-container *ngIf="afterFiltered(person.firstName, person.lastName)">
           <th>{{ i + 1 }}</th>
           <td>{{ person.firstName }}</td>
