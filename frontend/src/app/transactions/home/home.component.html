@@ -27,7 +27,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let transaction of transactions; let i = index">
+          <tr
+            *ngFor="
+              let transaction of transactionsService.transactions;
+              let i = index
+            "
+          >
             <ng-container *ngIf="afterFiltered(transaction.recipientName)">
               <th>{{ i + 1 }}</th>
               <td>{{ transaction.recipientName }}</td>

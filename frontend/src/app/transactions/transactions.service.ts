@@ -18,6 +18,7 @@ export interface DepositRequest {
   providedIn: 'root',
 })
 export class TransactionsService {
+  transactions!: TransactionResponse[];
   rootUrl = 'http://localhost:7777';
   constructor(private http: HttpClient) {}
 

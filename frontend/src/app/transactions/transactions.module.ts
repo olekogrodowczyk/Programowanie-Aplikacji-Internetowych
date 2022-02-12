@@ -10,7 +10,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [HomeComponent, DepositFormComponent],
   imports: [CommonModule, TransactionsRoutingModule, ReactiveFormsModule],
-  providers: [TransactionsService],
   exports: [DepositFormComponent],
 })
 export class TransactionsModule {}

@@ -17,10 +17,10 @@ import {
 export class HomeComponent implements OnInit, OnDestroy {
   filterPersonValue: string = '';
   recipientId: string | null = '';
-  transactions: TransactionResponse[] = [];
+
   constructor(
     private route: ActivatedRoute,
-    private transactionsService: TransactionsService,
+    public transactionsService: TransactionsService,
     private snackBar: SnackBarService,
     private authService: AuthService,
     private webSocketService: WebsocketService
@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.recipientId == null) {
       this.transactionsService.getAllTransactions().subscribe({
         next: (response) => {
-          this.transactions = response;
+          this.transactionsService.transactions = response;
         },
         error: () => {
           console.log('Unexpected error occurred');
@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         .getTransactionsByRecipiendId(this.recipientId)
         .subscribe({
           next: (response) => {
-            this.transactions = response;
+            this.transactionsService.transactions = response;
           },
           error: () => {
             console.log('Unexpected error occurred');

@@ -1,5 +1,6 @@
 const db = require("./db");
 const lib = require("./lib");
+const transaction = require("./transaction");
 
 const deposit = (module.exports = {
   handle: function (env) {
@@ -19,9 +20,15 @@ const deposit = (module.exports = {
     depositData.when = Date.now();
     switch (env.req.method) {
       case "POST":
-        db.transactions.insertOne(depositData, function (err, result) {
+        db.transactions.insertOne(depositData, async function (err, result) {
           if (!err) {
             lib.sendJson(env.res, depositData);
+            let creator = await db.persons.findOne({
+              _id: depositData.recipient,
+            });
+            depositData.recipientName =
+              creator.firstName + " " + creator.lastName;
+            depositData.type = "deposit";
             lib.broadcast(depositData);
           } else {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");
