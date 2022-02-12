@@ -45,4 +45,8 @@ export class ContractsService {
       null
     );
   }
+
+  deleteContract(contractId: string) {
+    return this.http.delete(`${this.rootUrl}/contract?_id=${contractId}`);
+  }
 }

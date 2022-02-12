@@ -14,6 +14,7 @@
       <th>Data zakończenia</th>
       <th>Data utworzenia</th>
       <th>Stan</th>
+      <th>Akcje</th>
     </thead>
     <tbody>
       <tr *ngFor="let contract of contractsService.contracts; index as i">
@@ -37,6 +38,14 @@
           <p style="font-weight: normal" *ngIf="contract.commited">
             Rozliczone
           </p>
+        </th>
+        <th>
+          <button
+            (click)="onDeleteClick(contract._id)"
+            class="button is-link is-small"
+          >
+            Usuń
+          </button>
         </th>
       </tr>
     </tbody>

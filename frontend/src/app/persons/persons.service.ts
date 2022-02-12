@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
 export interface Person {
-  _id: number;
+  _id: string;
   firstName: string;
   lastName: string;
   year: number;
@@ -18,7 +18,7 @@ export interface addPersonCredentials {
 }
 
 export interface editPersonCredentials {
-  _id: number;
+  _id: string;
   firstName: string;
   lastName: string;
   year: number;
@@ -46,5 +46,9 @@ export class PersonsService {
 
   getPersonById(personId: string) {
     return this.http.get<Person>(`${this.rootUrl}/person?_id=${personId}`);
+  }
+
+  deletePerson(personId: string) {
+    return this.http.delete(`${this.rootUrl}/person?_id=${personId}`);
   }
 }

@@ -43,7 +43,14 @@
             >
               Edytuj
             </button>
+            <button
+              (click)="onDeleteClick(person._id)"
+              class="button is-link is-small table-button"
+            >
+              Usuń
+            </button>
           </td>
+
           <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
             <a
               [routerLink]="['/transactions']"

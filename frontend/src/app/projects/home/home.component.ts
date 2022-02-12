@@ -69,4 +69,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.projectToEdit = project;
     this.showEditProjectModal = true;
   }
+
+  onDeleteClick(projectId: string) {
+    this.projectsService.deleteProject(projectId).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Pomyślnie usunięto projekt', 'OK');
+      },
+      error: () => {
+        this.snackBar.openSnackBar(
+          'Nastąpił błąd podczas usuwania projektu',
+          'OK'
+        );
+      },
+    });
+    this.ngOnInit();
+  }
 }

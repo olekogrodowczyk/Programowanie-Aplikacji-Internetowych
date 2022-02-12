@@ -69,8 +69,10 @@ const person = module.exports = {
             case 'DELETE':
                 _id = db.ObjectId(env.urlParsed.query._id)
                 if(_id) {
-                    db.persons.findOneAndDelete({ _id }, function(err, result) {
+                    db.persons.findOneAndDelete({ _id }, async function(err, result) {
                         if(!err) {
+                            await db.transactions.deleteMany({recipient: _id});
+                            await db.contracts.deleteMany({contractor: _id});
                             sendAllPersons(q)
                         } else {
                             lib.sendError(env.res, 400, 'persons.findOneAndDelete() failed')

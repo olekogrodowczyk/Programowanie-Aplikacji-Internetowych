@@ -104,6 +104,24 @@ const project = (module.exports = {
           );
         }
         break;
+      case "DELETE":
+        _id = db.ObjectId(env.urlParsed.query._id);
+        if (_id) {
+          db.projects.findOneAndDelete({ _id }, async function (err, result) {
+            if (!err) {
+              await db.contracts.deleteMany({ project: _id });
+            } else {
+              lib.sendError(env.res, 400, "projects.findOneAndDelete() failed");
+            }
+          });
+        } else {
+          lib.sendError(
+            env.res,
+            400,
+            "broken _id for delete " + env.urlParsed.query._id
+          );
+        }
+        break;
       default:
         lib.sendError(env.res, 405, "method not implemented");
     }

@@ -66,4 +66,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.snackBar.openSnackBar(notificationMessage, 'Ok');
     this.ngOnInit();
   }
+
+  onDeleteClick(contractId: string) {
+    this.contractsService.deleteContract(contractId).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Pomyślnie usunięto umowę', 'OK');
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Nie udało się usunąć umowy', 'OK');
+      },
+    });
+    this.ngOnInit();
+  }
 }

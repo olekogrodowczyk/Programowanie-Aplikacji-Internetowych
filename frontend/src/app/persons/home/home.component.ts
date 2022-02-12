@@ -40,6 +40,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  onDeleteClick(personId: string) {
+    this.personsService.deletePerson(personId).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Pomyślnie usunięto osobę', 'OK');
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Nie udało się usunąć osoby', 'OK');
+      },
+    });
+    this.ngOnInit();
+  }
+
   getFilterValue(event: Event): string {
     return (event.target as HTMLInputElement).value;
   }

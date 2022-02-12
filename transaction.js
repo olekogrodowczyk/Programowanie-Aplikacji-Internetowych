@@ -20,7 +20,8 @@ const transaction = (module.exports = {
                   recipient: obj.recipient,
                   amount: obj.amount,
                   when: obj.when,
-                  recipientName: recipient.firstName + " " + recipient.lastName,
+                  recipientName:
+                    recipient?.firstName + " " + recipient?.lastName,
                 };
               })
             );
@@ -47,7 +48,7 @@ const transaction = (module.exports = {
                     amount: obj.amount,
                     when: obj.when,
                     recipientName:
-                      recipient.firstName + " " + recipient.lastName,
+                      recipient?.firstName + " " + recipient?.lastName,
                   };
                 });
                 lib.sendJson(env.res, newArray);

@@ -39,4 +39,8 @@ export class ProjectsService {
   getProjects() {
     return this.http.get<Project[]>(`${this.rootUrl}/project`);
   }
+
+  deleteProject(projectId: string) {
+    return this.http.delete(`${this.rootUrl}/project?_id=${projectId}`);
+  }
 }
