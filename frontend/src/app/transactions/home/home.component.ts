@@ -1,8 +1,9 @@
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
+import { WebsocketService } from 'src/app/websocket.service';
 import {
   TransactionResponse,
   TransactionsService,
@@ -13,7 +14,7 @@ import {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   filterPersonValue: string = '';
   recipientId: string | null = '';
   transactions: TransactionResponse[] = [];
@@ -21,10 +22,16 @@ export class HomeComponent implements OnInit {
     private route: ActivatedRoute,
     private transactionsService: TransactionsService,
     private snackBar: SnackBarService,
-    private authService: AuthService
+    private authService: AuthService,
+    private webSocketService: WebsocketService
   ) {}
 
+  ngOnDestroy(): void {
+    this.webSocketService.closeWebSocket();
+  }
+
   ngOnInit(): void {
+    this.webSocketService.openWebSocket();
     this.recipientId = this.route.snapshot.queryParamMap.get('recipientId');
     console.log(this.recipientId);
     if (this.recipientId == null) {

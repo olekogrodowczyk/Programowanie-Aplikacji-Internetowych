@@ -1,10 +1,25 @@
+const ws = require("ws");
+
 const lib = (module.exports = {
   sessions: {}, // { uuid: { }, ... }
+
+  wsServer: null,
 
   sendJson: function (res, obj = null) {
     res.writeHead(200, { "Content-type": "application/json" });
     if (obj != null) res.write(JSON.stringify(obj));
     res.end();
+  },
+
+  broadcast: function (data, selector = null) {
+    let n = 0;
+    lib.wsServer.clients.forEach(function (client) {
+      if (client.readyState == ws.OPEN && (!selector || selector(client))) {
+        client.send(JSON.stringify(data));
+        n++;
+      }
+    });
+    console.log("Sending a message ", data, "to", n, "clients");
   },
 
   sendError: function (res, code, cause = "") {

@@ -3,6 +3,7 @@ const url = require("url");
 const nodestatic = require("node-static");
 const uuid = require("uuid");
 const cookies = require("cookies");
+const ws = require("ws");
 
 const lib = require("./lib");
 const person = require("./person");
@@ -120,6 +121,23 @@ server.on("request", function (req, res) {
           console.log("Error in requests");
       }
     });
+});
+
+lib.wsServer = new ws.Server({ server });
+
+lib.wsServer.on("connection", function (client) {
+  client.on("message", function (message) {
+    try {
+      message = JSON.parse(message);
+      if (lib.sessions[message.session]) {
+        client.session = message.session;
+        lib.sessions[message.session].wsClient = client;
+        console.log("Websocket connection established for", message.session);
+      }
+    } catch (err) {
+      console.error("WS message error", err);
+    }
+  });
 });
 
 db.init(function () {
