@@ -32,6 +32,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.webSocketService.openWebSocket();
+    if (!this.personsService.persons) {
+      this.getPersons();
+    }
+  }
+
+  getPersons() {
     this.personsService.getPersons().subscribe({
       next: (response) => {
         this.personsService.persons = response;

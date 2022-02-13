@@ -28,7 +28,7 @@ const deposit = (module.exports = {
             });
             depositData.recipientName =
               creator.firstName + " " + creator.lastName;
-            depositData.type = "deposit";
+            depositData.type = "addDeposit";
             lib.broadcast(depositData);
           } else {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");

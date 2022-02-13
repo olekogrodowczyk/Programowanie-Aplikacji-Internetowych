@@ -34,19 +34,31 @@ export class WebsocketService {
       console.log('Message caught');
       const data = JSON.parse(event.data);
       switch (data.type) {
-        case 'deposit':
+        case 'addDeposit':
           this.transationsService.transactions.push(
             data as TransactionResponse
           );
           break;
-        case 'project':
+        case 'addProject':
           this.projectsService.projects.push(data as Project);
           break;
-        case 'contract':
+        case 'addContract':
           this.contractsService.contracts.push(data as Contract);
           break;
-        case 'person':
+        case 'addPerson':
           this.personsService.persons.push(data as Person);
+          break;
+        case 'refreshTransactions':
+          this.refreshTransactions();
+          break;
+        case 'refreshPersons':
+          this.refreshPersons();
+          break;
+        case 'refreshProjects':
+          this.refreshProjects();
+          break;
+        case 'refreshContracts':
+          this.refreshContracts();
           break;
         default:
           console.log('Unrecognized web socket message');
@@ -65,5 +77,57 @@ export class WebsocketService {
 
   public closeWebSocket() {
     this.webSocket.close();
+  }
+
+  public refreshTransactions() {
+    this.transationsService.getAllTransactions().subscribe({
+      next: (response) => {
+        this.transationsService.transactions = response;
+      },
+      error: () => {
+        console.log(
+          'An unexptected error has occured while refreshing transactions by web socket'
+        );
+      },
+    });
+  }
+
+  public refreshPersons() {
+    this.personsService.getPersons().subscribe({
+      next: (response) => {
+        this.personsService.persons = response;
+      },
+      error: () => {
+        console.log(
+          'An unexptected error has occured while refreshing persons by web socket'
+        );
+      },
+    });
+  }
+
+  public refreshProjects() {
+    this.projectsService.getProjects().subscribe({
+      next: (response) => {
+        this.projectsService.projects = response;
+      },
+      error: () => {
+        console.log(
+          'An unexptected error has occured while refreshing projects by web socket'
+        );
+      },
+    });
+  }
+
+  public refreshContracts() {
+    this.contractsService.getContracts().subscribe({
+      next: (response) => {
+        this.contractsService.contracts = response;
+      },
+      error: () => {
+        console.log(
+          'An unexptected error has occured while refreshing contracts by web socket'
+        );
+      },
+    });
   }
 }

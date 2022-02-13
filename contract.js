@@ -119,7 +119,7 @@ const contract = (module.exports = {
             contract.creator = creator.firstName + " " + creator.lastName;
             contract.project = project.name;
             contract.contractor = contract.firstName + " " + contract.lastName;
-            contract.type = "contract";
+            contract.type = "addContract";
             lib.broadcast(contract);
           } else {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");
@@ -151,6 +151,7 @@ const contract = (module.exports = {
             "broken _id for update " + env.urlParsed.query._id
           );
         }
+        lib.broadcast({ type: "refreshContracts" });
         break;
       case "DELETE":
         _id = db.ObjectId(env.urlParsed.query._id);
@@ -168,6 +169,7 @@ const contract = (module.exports = {
             "broken _id for delete " + env.urlParsed.query._id
           );
         }
+        lib.broadcast({ type: "refreshContracts" });
         break;
       default:
         lib.sendError(env.res, 405, "method not implemented");

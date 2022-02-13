@@ -29,7 +29,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.webSocketService.openWebSocket();
-    this.getProjects();
+    if (!this.projectsService.projects) {
+      this.getProjects();
+    }
   }
 
   getProjects() {

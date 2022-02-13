@@ -33,9 +33,30 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.webSocketService.openWebSocket();
     this.recipientId = this.route.snapshot.queryParamMap.get('recipientId');
-    console.log(this.recipientId);
     if (this.recipientId == null) {
-      this.transactionsService.getAllTransactions().subscribe({
+      this.getTransactionByRecipientId();
+    } else {
+      if (!this.transactionsService.transactions) {
+        this.getAllTransactions();
+      }
+    }
+  }
+
+  getAllTransactions() {
+    this.transactionsService.getAllTransactions().subscribe({
+      next: (response) => {
+        this.transactionsService.transactions = response;
+      },
+      error: () => {
+        console.log('Unexpected error occurred');
+      },
+    });
+  }
+
+  getTransactionByRecipientId() {
+    this.transactionsService
+      .getTransactionsByRecipiendId(this.recipientId!)
+      .subscribe({
         next: (response) => {
           this.transactionsService.transactions = response;
         },
@@ -43,19 +64,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           console.log('Unexpected error occurred');
         },
       });
-    } else {
-      this.transactionsService
-        .getTransactionsByRecipiendId(this.recipientId)
-        .subscribe({
-          next: (response) => {
-            this.transactionsService.transactions = response;
-          },
-          error: () => {
-            console.log('Unexpected error occurred');
-          },
-        });
-    }
   }
+
   getFilterPersonValue(event: Event): string {
     return (event.target as HTMLInputElement).value;
   }

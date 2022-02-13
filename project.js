@@ -70,7 +70,7 @@ const project = (module.exports = {
             });
             project.creator = creator.firstName + " " + creator.lastName;
             project.manager = manager.firstName + " " + creator.lastName;
-            project.type = "project";
+            project.type = "addProject";
             lib.broadcast(project);
           } else {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");
@@ -103,6 +103,8 @@ const project = (module.exports = {
             "broken _id for update " + env.urlParsed.query._id
           );
         }
+        lib.broadcast({ type: "refreshProjects" });
+        lib.broadcast({ type: "refreshContracts" });
         break;
       case "DELETE":
         _id = db.ObjectId(env.urlParsed.query._id);
@@ -121,6 +123,8 @@ const project = (module.exports = {
             "broken _id for delete " + env.urlParsed.query._id
           );
         }
+        lib.broadcast({ type: "refreshProjects" });
+        lib.broadcast({ type: "refreshContracts" });
         break;
       default:
         lib.sendError(env.res, 405, "method not implemented");

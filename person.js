@@ -59,7 +59,7 @@ const person = module.exports = {
                         sendAllPersons(q)
                         person.transactions = 0;
                         person.balance = 0;
-                        person.type = 'person';
+                        person.type = 'addPerson';
                         lib.broadcast(person);
                     } else {
                         lib.sendError(env.res, 400, 'persons.insertOne() failed')
@@ -73,6 +73,7 @@ const person = module.exports = {
                         if(!err) {
                             await db.transactions.deleteMany({recipient: _id});
                             await db.contracts.deleteMany({contractor: _id});
+                            lib.broadcast({type: 'refreshTransactions'})
                             sendAllPersons(q)
                         } else {
                             lib.sendError(env.res, 400, 'persons.findOneAndDelete() failed')
@@ -81,6 +82,10 @@ const person = module.exports = {
                 } else {
                     lib.sendError(env.res, 400, 'broken _id for delete ' + env.urlParsed.query._id)
                 }
+                lib.broadcast({ type: "refreshPersons" });
+                lib.broadcast({ type: "refreshProjects" });
+                lib.broadcast({ type: "refreshContracts" });
+                lib.broadcast({ type: "refreshTransaction" });         
                 break
             case 'PUT':
                 _id = db.ObjectId(env.payload._id)
@@ -95,6 +100,10 @@ const person = module.exports = {
                 } else {
                     lib.sendError(env.res, 400, 'broken _id for update ' + env.urlParsed.query._id)
                 }
+                lib.broadcast({ type: "refreshPersons" });
+                lib.broadcast({ type: "refreshProjects" });
+                lib.broadcast({ type: "refreshContracts" });
+                lib.broadcast({ type: "refreshTransaction" });
                 break
             default:
                 lib.sendError(env.res, 405, 'method not implemented')
