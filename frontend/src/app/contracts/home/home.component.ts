@@ -51,6 +51,7 @@ export class HomeComponent implements OnInit {
         );
       },
     });
+    this.ngOnInit();
   }
 
   onAddContractSubmit(value: boolean) {

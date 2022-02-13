@@ -43,6 +43,14 @@ const lib = (module.exports = {
     });
   },
 
+  webSocketRefreshUsers(env) {
+    lib.broadcast({ type: "refreshUsers" }, function (client) {
+      if (client.session == env.session) return false;
+      let session = lib.sessions[client.session];
+      return session && session.roles.includes("admin");
+    });
+  },
+
   broadcast: function (data, selector = null) {
     let n = 0;
     lib.wsServer.clients.forEach(function (client) {
@@ -68,6 +76,7 @@ const lib = (module.exports = {
     { req: "^(POST|DELETE|GET|PUT) /auth", roles: [], error: null },
     { req: "^Post /deposit$", roles: ["admin"], error: null },
     { req: " ^(POST|PUT|DELETE|GET) /projects", roles: ["admin"], error: null },
+    { req: " ^(POST|PUT|DELETE|GET) /users", roles: ["admin"], error: null },
     {
       req: " ^(POST|PUT|DELETE|GET) /contracts",
       roles: ["manager"],

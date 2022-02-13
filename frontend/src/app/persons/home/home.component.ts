@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   personIdToDelete!: string;
   showAddPersonModal = false;
   showEditPersonModal = false;
-  showDeleteProjectModal = false;
+  showDeletePersonModal = false;
 
   constructor(
     public personsService: PersonsService,
@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit {
         this.snackBar.openSnackBar('Nie udało się usunąć osoby', 'OK');
       },
     });
-    this.showDeleteProjectModal = false;
+    this.showDeletePersonModal = false;
   }
 
   getFilterValue(event: Event): string {

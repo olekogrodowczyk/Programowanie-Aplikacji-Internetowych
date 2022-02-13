@@ -57,7 +57,7 @@
               <button
                 class="button is-link is-small table-button"
                 (click)="
-                  showDeleteProjectModal = true; personIdToDelete = person._id
+                  showDeletePersonModal = true; personIdToDelete = person._id
                 "
               >
                 Usuń
@@ -116,8 +116,8 @@
 
 <app-modal
   [title]="'Usuwanie osoby'"
-  *ngIf="showDeleteProjectModal"
-  (onClose)="showDeleteProjectModal = false"
+  *ngIf="showDeletePersonModal"
+  (onClose)="showDeletePersonModal = false"
 >
   <ng-container>
     <h1>Czy jesteś pewien?</h1>
