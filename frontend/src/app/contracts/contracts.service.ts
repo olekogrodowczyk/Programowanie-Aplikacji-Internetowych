@@ -15,7 +15,7 @@ export interface Contract {
   name: string;
   payment: number;
   creationTime: string;
-  creator: string;
+  manager: string;
   contractor: string;
   project: string;
   startTime: string;

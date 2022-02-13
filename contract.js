@@ -59,7 +59,7 @@ const contract = (module.exports = {
         startTime: env.payload.startTime,
         endTime: env.payload.endTime,
         project: db.ObjectId(project),
-        creator: db.ObjectId(lib.sessions[env.session]._id),
+        manager: db.ObjectId(lib.sessions[env.session]._id),
         contractor: db.ObjectId(contractor),
         creationTime: Date.now(),
         commited: false,
@@ -74,8 +74,8 @@ const contract = (module.exports = {
               const project = await db.projects.findOne({
                 _id: contract.project,
               });
-              const creator = await db.users.findOne({
-                _id: contract.creator,
+              const manager = await db.users.findOne({
+                _id: project.manager,
               });
               const contractor = await db.persons.findOne({
                 _id: contract.contractor,
@@ -85,8 +85,8 @@ const contract = (module.exports = {
                 name: contract.name,
                 payment: contract.payment,
                 creationTime: contract.creationTime,
-                creator: creator.firstName + " " + creator.lastName,
-                contractor: contractor.firstName + " " + contractor.lastName,
+                manager: manager?.firstName + " " + manager?.lastName,
+                contractor: contractor?.firstName + " " + contractor?.lastName,
                 project: project.name,
                 startTime: contract.startTime,
                 endTime: contract.endTime,
@@ -111,11 +111,14 @@ const contract = (module.exports = {
         db.contracts.insertOne(contract, async function (err, result) {
           if (!err) {
             lib.sendJson(env.res, result);
-            let creator = await db.users.findOne({ _id: contract.creator });
             let project = await db.projects.findOne({ _id: contract.project });
+            let manager = await db.users.findOne({ _id: project.manager });
             let contractor = await db.persons.findOne({
               _id: contract.contractor,
             });
+            if (!project || !manager || !contractor) {
+              return;
+            }
             contract.creator = creator.firstName + " " + creator.lastName;
             contract.project = project.name;
             contract.contractor = contract.firstName + " " + contract.lastName;
