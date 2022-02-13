@@ -11,7 +11,7 @@ import { WebsocketService } from 'src/app/websocket.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
   filterValue: string = '';
   personToEdit: Person = {} as Person;
   personIdToDelete!: string;
@@ -26,15 +26,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     private webSocketService: WebsocketService
   ) {}
 
-  ngOnDestroy(): void {
-    this.webSocketService.closeWebSocket();
-  }
-
   ngOnInit(): void {
+    this.getPersons();
     this.webSocketService.openWebSocket();
-    if (!this.personsService.persons) {
-      this.getPersons();
-    }
   }
 
   getPersons() {
@@ -51,6 +45,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   onDeleteClick(personId: string) {
     this.personsService.deletePerson(personId).subscribe({
       next: () => {
+        this.ngOnInit();
         this.snackBar.openSnackBar('Pomyślnie usunięto osobę', 'OK');
       },
       error: () => {
@@ -58,7 +53,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
     });
     this.showDeleteProjectModal = false;
-    this.ngOnInit();
   }
 
   getFilterValue(event: Event): string {

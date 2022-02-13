@@ -14,7 +14,7 @@ import {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
   filterPersonValue: string = '';
   recipientId: string | null = '';
 
@@ -26,14 +26,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     private webSocketService: WebsocketService
   ) {}
 
-  ngOnDestroy(): void {
-    this.webSocketService.closeWebSocket();
-  }
-
   ngOnInit(): void {
     this.webSocketService.openWebSocket();
     this.recipientId = this.route.snapshot.queryParamMap.get('recipientId');
-    if (this.recipientId == null) {
+    if (this.recipientId) {
       this.getTransactionByRecipientId();
     } else {
       if (!this.transactionsService.transactions) {
@@ -54,6 +50,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getTransactionByRecipientId() {
+    console.log(this.recipientId);
+
     this.transactionsService
       .getTransactionsByRecipiendId(this.recipientId!)
       .subscribe({
@@ -81,6 +79,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   refresh(value: boolean) {
     if (value) {
+      this.getAllTransactions();
       this.ngOnInit();
       this.snackBar.openSnackBar('Pomyślnie wpłacono podaną kwotę', 'OK');
     } else {

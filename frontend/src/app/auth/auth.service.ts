@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
+import { WebsocketService } from '../websocket.service';
 
 interface SignupCredentials {
   login: string;
@@ -38,7 +39,10 @@ export class AuthService {
 
   signedin$ = new BehaviorSubject(false);
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private webSocketService: WebsocketService
+  ) {}
 
   signIn(credentials: SigninCredentials) {
     return this.http
@@ -85,6 +89,7 @@ export class AuthService {
   }
 
   signout() {
+    this.webSocketService.closeWebSocket();
     return this.http.delete(`${this.rootUrl}/auth`).pipe(
       tap(() => {
         this.signedin$.next(false);

@@ -57,10 +57,7 @@ const person = module.exports = {
                 db.persons.insertOne(person, async function(err, result) {
                     if(!err) {
                         sendAllPersons(q)
-                        person.transactions = 0;
-                        person.balance = 0;
-                        person.type = 'addPerson';
-                        lib.broadcast(person);
+                        lib.webSocketRefreshPersons(env);
                     } else {
                         lib.sendError(env.res, 400, 'persons.insertOne() failed')
                     }
@@ -73,7 +70,10 @@ const person = module.exports = {
                         if(!err) {
                             await db.transactions.deleteMany({recipient: _id});
                             await db.contracts.deleteMany({contractor: _id});
-                            lib.broadcast({type: 'refreshTransactions'})
+                            lib.webSocketRefreshContracts(env);
+                            lib.webSocketRefreshPersons(env);
+                            lib.webSocketRefreshProjects(env);
+                            lib.webSocketRefreshTransactions(env);
                             sendAllPersons(q)
                         } else {
                             lib.sendError(env.res, 400, 'persons.findOneAndDelete() failed')
@@ -82,16 +82,17 @@ const person = module.exports = {
                 } else {
                     lib.sendError(env.res, 400, 'broken _id for delete ' + env.urlParsed.query._id)
                 }
-                lib.broadcast({ type: "refreshPersons" });
-                lib.broadcast({ type: "refreshProjects" });
-                lib.broadcast({ type: "refreshContracts" });
-                lib.broadcast({ type: "refreshTransaction" });         
+                       
                 break
             case 'PUT':
                 _id = db.ObjectId(env.payload._id)
                 if(_id) {
                     db.persons.findOneAndUpdate({ _id }, { $set: person }, { returnOriginal: false }, function(err, result) {
                         if(!err) {
+                            lib.webSocketRefreshContracts(env);
+                            lib.webSocketRefreshPersons(env);
+                            lib.webSocketRefreshProjects(env);
+                            lib.webSocketRefreshTransactions(env);
                             sendAllPersons(q)
                         } else {
                             lib.sendError(env.res, 400, 'persons.findOneAndUpdate() failed')
@@ -100,10 +101,6 @@ const person = module.exports = {
                 } else {
                     lib.sendError(env.res, 400, 'broken _id for update ' + env.urlParsed.query._id)
                 }
-                lib.broadcast({ type: "refreshPersons" });
-                lib.broadcast({ type: "refreshProjects" });
-                lib.broadcast({ type: "refreshContracts" });
-                lib.broadcast({ type: "refreshTransaction" });
                 break
             default:
                 lib.sendError(env.res, 405, 'method not implemented')

@@ -20,8 +20,12 @@
           <th>Imię</th>
           <th>Nazwisko</th>
           <th>Rok urodzenia</th>
-          <th>Transakcji</th>
-          <th>Stan konta</th>
+          <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+            Transakcji
+          </th>
+          <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+            Stan konta
+          </th>
           <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">Akcje</th>
           <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
             Historia transakcji
@@ -37,8 +41,12 @@
             <td>{{ person.firstName }}</td>
             <td>{{ person.lastName }}</td>
             <td>{{ person.year }}</td>
-            <td>{{ person.transactions }}</td>
-            <td>{{ person.balance | currency: "PLN":"symbol" }}</td>
+            <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+              {{ person.transactions }}
+            </td>
+            <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+              {{ person.balance | currency: "PLN":"symbol" }}
+            </td>
             <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
               <button
                 (click)="onEditClick(person)"

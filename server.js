@@ -129,10 +129,19 @@ lib.wsServer.on("connection", function (client) {
   client.on("message", function (message) {
     try {
       message = JSON.parse(message);
-      if (lib.sessions[message.session]) {
-        client.session = message.session;
-        lib.sessions[message.session].wsClient = client;
-        console.log("Websocket connection established for", message.session);
+      switch (message.type) {
+        case "init":
+          if (lib.sessions[message.session]) {
+            client.session = message.session;
+            lib.sessions[message.session].wsClient = client;
+            console.log(
+              "Websocket connection established for",
+              message.session
+            );
+          }
+          break;
+        default:
+          console.error("WS message not recognized", message);
       }
     } catch (err) {
       console.error("WS message error", err);

@@ -11,6 +11,38 @@ const lib = (module.exports = {
     res.end();
   },
 
+  webSocketRefreshPersons(env) {
+    lib.broadcast({ type: "refreshPersons" }, function (client) {
+      if (client.session == env.session) return false;
+      let session = lib.sessions[client.session];
+      return session && session.roles.includes("user");
+    });
+  },
+
+  webSocketRefreshTransactions(env) {
+    lib.broadcast({ type: "refreshTransactions" }, function (client) {
+      if (client.session == env.session) return false;
+      let session = lib.sessions[client.session];
+      return session && session.roles.includes("admin");
+    });
+  },
+
+  webSocketRefreshProjects(env) {
+    lib.broadcast({ type: "refreshProjects" }, function (client) {
+      if (client.session == env.session) return false;
+      let session = lib.sessions[client.session];
+      return session && session.roles.includes("admin");
+    });
+  },
+
+  webSocketRefreshContracts(env) {
+    lib.broadcast({ type: "refreshContracts" }, function (client) {
+      if (client.session == env.session) return false;
+      let session = lib.sessions[client.session];
+      return session && session.roles.includes("manager");
+    });
+  },
+
   broadcast: function (data, selector = null) {
     let n = 0;
     lib.wsServer.clients.forEach(function (client) {
@@ -34,7 +66,7 @@ const lib = (module.exports = {
   permissions: [
     { req: "POST /register$", roles: [], error: null },
     { req: "^(POST|DELETE|GET|PUT) /auth", roles: [], error: null },
-    { req: "^Post /deposit$", roles: ["admin", "manager"], error: null },
+    { req: "^Post /deposit$", roles: ["admin"], error: null },
     { req: " ^(POST|PUT|DELETE|GET) /projects", roles: ["admin"], error: null },
     {
       req: " ^(POST|PUT|DELETE|GET) /contracts",
@@ -59,8 +91,6 @@ const lib = (module.exports = {
         break;
       }
     }
-
-    console.log("permittedRoles", permittedRoles);
 
     // jeśli url ma pustą tablicę ról, jest niechroniony
     if (permittedRoles.length < 1) return true;

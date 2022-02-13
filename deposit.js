@@ -23,13 +23,8 @@ const deposit = (module.exports = {
         db.transactions.insertOne(depositData, async function (err, result) {
           if (!err) {
             lib.sendJson(env.res, depositData);
-            let creator = await db.persons.findOne({
-              _id: depositData.recipient,
-            });
-            depositData.recipientName =
-              creator.firstName + " " + creator.lastName;
-            depositData.type = "addDeposit";
-            lib.broadcast(depositData);
+            lib.webSocketRefreshPersons(env);
+            lib.webSocketRefreshTransactions(env);
           } else {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");
           }

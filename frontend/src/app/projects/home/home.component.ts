@@ -9,7 +9,7 @@ import { Project, ProjectsService } from '../projects.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
   projectToEdit: Project = {} as Project;
   projectIdToDelete!: string;
   showAddProjectModal = false;
@@ -23,15 +23,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     private webSocketService: WebsocketService
   ) {}
 
-  ngOnDestroy(): void {
-    this.webSocketService.closeWebSocket();
-  }
-
   ngOnInit(): void {
+    this.getProjects();
     this.webSocketService.openWebSocket();
-    if (!this.projectsService.projects) {
-      this.getProjects();
-    }
   }
 
   getProjects() {

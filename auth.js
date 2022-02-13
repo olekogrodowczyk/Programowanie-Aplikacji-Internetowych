@@ -15,6 +15,7 @@ const auth = (module.exports = {
           firstName: lib.sessions[env.session].firstName || "",
           lastName: lib.sessions[env.session].lastName || "",
         });
+        console.log(env.session);
         break;
       case "POST":
         db.users.findOne(

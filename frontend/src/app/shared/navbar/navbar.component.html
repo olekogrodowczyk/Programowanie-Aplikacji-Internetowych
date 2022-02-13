@@ -31,10 +31,10 @@
           routerLink="/persons"
           class="navbar-item"
         >
-          Osoby
+          Wykonawcy
         </a>
         <a
-          *ngIf="checkPermissions(['admin', 'manager'])"
+          *ngIf="checkPermissions(['admin'])"
           [routerLinkActiveOptions]="{ exact: true }"
           routerLinkActive="is-active"
           routerLink="/transactions"
@@ -43,7 +43,7 @@
           Transakcje
         </a>
         <a
-          *ngIf="checkPermissions(['admin', 'manager'])"
+          *ngIf="checkPermissions(['admin'])"
           [routerLinkActiveOptions]="{ exact: true }"
           routerLinkActive="is-active"
           routerLink="/projects"

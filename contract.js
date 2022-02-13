@@ -59,7 +59,7 @@ const contract = (module.exports = {
         startTime: env.payload.startTime,
         endTime: env.payload.endTime,
         project: db.ObjectId(project),
-        manager: db.ObjectId(lib.sessions[env.session]._id),
+        creator: db.ObjectId(lib.sessions[env.session]._id),
         contractor: db.ObjectId(contractor),
         creationTime: Date.now(),
         commited: false,
@@ -67,38 +67,48 @@ const contract = (module.exports = {
     };
 
     const sendAllContracts = async (q = "") => {
-      await db.contracts.find({}).toArray(async function (err, contracts) {
-        if (!err) {
-          let newArray = await Promise.all(
-            contracts.map(async function (contract) {
-              const project = await db.projects.findOne({
-                _id: contract.project,
-              });
-              const manager = await db.users.findOne({
-                _id: project.manager,
-              });
-              const contractor = await db.persons.findOne({
-                _id: contract.contractor,
-              });
-              return {
-                _id: contract._id,
-                name: contract.name,
-                payment: contract.payment,
-                creationTime: contract.creationTime,
-                manager: manager?.firstName + " " + manager?.lastName,
-                contractor: contractor?.firstName + " " + contractor?.lastName,
-                project: project.name,
-                startTime: contract.startTime,
-                endTime: contract.endTime,
-                commited: contract.commited,
-              };
-            })
-          );
-          lib.sendJson(env.res, newArray);
-        } else {
-          lib.sendError(env.res, 400, "persons.aggregate() failed " + err);
-        }
-      });
+      let forManager = false;
+      let currentUserId = lib.sessions[env.session]._id;
+      if (lib.sessions[env.session].roles.includes("manager")) {
+        forManager = true;
+      }
+      console.log("ID:");
+      console.log(currentUserId);
+      await db.contracts
+        .find({ manager: currentUserId })
+        .toArray(async function (err, contracts) {
+          if (!err) {
+            let newArray = await Promise.all(
+              contracts.map(async function (contract) {
+                const project = await db.projects.findOne({
+                  _id: contract.project,
+                });
+                const manager = await db.users.findOne({
+                  _id: project.manager,
+                });
+                const contractor = await db.persons.findOne({
+                  _id: contract.contractor,
+                });
+                return {
+                  _id: contract._id,
+                  name: contract.name,
+                  payment: contract.payment,
+                  creationTime: contract.creationTime,
+                  manager: manager?.firstName + " " + manager?.lastName,
+                  contractor:
+                    contractor?.firstName + " " + contractor?.lastName,
+                  project: project.name,
+                  startTime: contract.startTime,
+                  endTime: contract.endTime,
+                  commited: contract.commited,
+                };
+              })
+            );
+            lib.sendJson(env.res, newArray);
+          } else {
+            lib.sendError(env.res, 400, "persons.aggregate() failed " + err);
+          }
+        });
     };
 
     switch (env.req.method) {
@@ -111,19 +121,7 @@ const contract = (module.exports = {
         db.contracts.insertOne(contract, async function (err, result) {
           if (!err) {
             lib.sendJson(env.res, result);
-            let project = await db.projects.findOne({ _id: contract.project });
-            let manager = await db.users.findOne({ _id: project.manager });
-            let contractor = await db.persons.findOne({
-              _id: contract.contractor,
-            });
-            if (!project || !manager || !contractor) {
-              return;
-            }
-            contract.creator = creator.firstName + " " + creator.lastName;
-            contract.project = project.name;
-            contract.contractor = contract.firstName + " " + contract.lastName;
-            contract.type = "addContract";
-            lib.broadcast(contract);
+            lib.webSocketRefreshContracts(env);
           } else {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");
           }
@@ -143,7 +141,14 @@ const contract = (module.exports = {
             { returnOriginal: false }
           );
           if (result) {
+            lib.webSocketRefreshContracts(env);
             lib.sendJson(env.res, "Contract edited successfully");
+            let deposit = {
+              recipient: contract.contractor,
+              amount: contract.payment,
+              when: Date.now(),
+            };
+            await db.transactions.insertOne(deposit);
           } else {
             lib.sendError(env.res, 400, "Error occurred in contract editing");
           }
@@ -154,13 +159,13 @@ const contract = (module.exports = {
             "broken _id for update " + env.urlParsed.query._id
           );
         }
-        lib.broadcast({ type: "refreshContracts" });
         break;
       case "DELETE":
         _id = db.ObjectId(env.urlParsed.query._id);
         if (_id) {
           db.contracts.findOneAndDelete({ _id }, async function (err, result) {
             if (!err) {
+              lib.webSocketRefreshContracts(env);
             } else {
               lib.sendError(env.res, 400, "projects.findOneAndDelete() failed");
             }
@@ -172,7 +177,6 @@ const contract = (module.exports = {
             "broken _id for delete " + env.urlParsed.query._id
           );
         }
-        lib.broadcast({ type: "refreshContracts" });
         break;
       default:
         lib.sendError(env.res, 405, "method not implemented");

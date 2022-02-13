@@ -64,14 +64,7 @@ const project = (module.exports = {
         db.projects.insertOne(project, async function (err, result) {
           if (!err) {
             lib.sendJson(env.res, result);
-            let creator = await db.users.findOne({ _id: currentUserId });
-            let manager = await db.users.findOne({
-              _id: db.ObjectId(env.payload.managerId),
-            });
-            project.creator = creator.firstName + " " + creator.lastName;
-            project.manager = manager.firstName + " " + creator.lastName;
-            project.type = "addProject";
-            lib.broadcast(project);
+            lib.webSocketRefreshProjects(env);
           } else {
             lib.sendError(env.res, 400, "transactions.insertOne() failed");
           }
@@ -92,6 +85,8 @@ const project = (module.exports = {
             { returnOriginal: false }
           );
           if (result) {
+            lib.webSocketRefreshContracts(env);
+            lib.webSocketRefreshProjects(env);
             lib.sendJson(env.res, "Project edited successfully");
           } else {
             lib.sendError(env.res, 400, "Error occurred in project editing");
@@ -103,14 +98,16 @@ const project = (module.exports = {
             "broken _id for update " + env.urlParsed.query._id
           );
         }
-        lib.broadcast({ type: "refreshProjects" });
-        lib.broadcast({ type: "refreshContracts" });
+        lib.webSocketRefreshContracts(env);
+        lib.webSocketRefreshProjects(env);
         break;
       case "DELETE":
         _id = db.ObjectId(env.urlParsed.query._id);
         if (_id) {
           db.projects.findOneAndDelete({ _id }, async function (err, result) {
             if (!err) {
+              lib.webSocketRefreshContracts(env);
+              lib.webSocketRefreshProjects(env);
               await db.contracts.deleteMany({ project: _id });
             } else {
               lib.sendError(env.res, 400, "projects.findOneAndDelete() failed");
@@ -123,8 +120,6 @@ const project = (module.exports = {
             "broken _id for delete " + env.urlParsed.query._id
           );
         }
-        lib.broadcast({ type: "refreshProjects" });
-        lib.broadcast({ type: "refreshContracts" });
         break;
       default:
         lib.sendError(env.res, 405, "method not implemented");

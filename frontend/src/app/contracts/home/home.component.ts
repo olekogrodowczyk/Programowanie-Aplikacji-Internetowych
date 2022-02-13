@@ -8,7 +8,7 @@ import { ContractsService, Contract } from '../contracts.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
   contractIdToDelete!: string;
   showAddContractModal = false;
   showDeleteContractModal = false;
@@ -19,15 +19,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     private webSocketService: WebsocketService
   ) {}
 
-  ngOnDestroy(): void {
-    this.webSocketService.closeWebSocket();
-  }
-
   ngOnInit(): void {
+    this.getContracts();
     this.webSocketService.openWebSocket();
-    if (!this.contractsService.contracts) {
-      this.getContracts();
-    }
   }
 
   getContracts() {

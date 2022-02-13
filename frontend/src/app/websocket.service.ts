@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
+import { AuthService } from './auth/auth.service';
 import { Contract, ContractsService } from './contracts/contracts.service';
 import { Person, PersonsService } from './persons/persons.service';
 import { Project, ProjectsService } from './projects/projects.service';
@@ -8,6 +9,13 @@ import {
   TransactionResponse,
   TransactionsService,
 } from './transactions/transactions.service';
+
+export enum TypeOfRefresh {
+  Persons = 1,
+  Transactions,
+  Projects,
+  Contracts,
+}
 
 @Injectable({
   providedIn: 'root',
@@ -24,40 +32,35 @@ export class WebsocketService {
   ) {}
 
   public openWebSocket() {
-    this.webSocket = new WebSocket('ws://localhost:7777');
+    if (!this.webSocket || this.webSocket?.readyState === WebSocket.CLOSED) {
+      this.webSocket = new WebSocket('ws://localhost:7777');
+    }
 
     this.webSocket.onopen = (event) => {
       console.log('Open: ', event);
+      let message = { type: 'init', session: this.getCookieSessionId() };
+      console.log(message);
+      this.webSocket.send(JSON.stringify(message));
     };
 
     this.webSocket.onmessage = (event) => {
       console.log('Message caught');
       const data = JSON.parse(event.data);
       switch (data.type) {
-        case 'addDeposit':
-          this.transationsService.transactions.push(
-            data as TransactionResponse
-          );
-          break;
-        case 'addProject':
-          this.projectsService.projects.push(data as Project);
-          break;
-        case 'addContract':
-          this.contractsService.contracts.push(data as Contract);
-          break;
-        case 'addPerson':
-          this.personsService.persons.push(data as Person);
-          break;
         case 'refreshTransactions':
+          console.log('refreshTransactions message caught');
           this.refreshTransactions();
           break;
         case 'refreshPersons':
+          console.log('refreshPersons message caught');
           this.refreshPersons();
           break;
         case 'refreshProjects':
+          console.log('refreshProjects message caught');
           this.refreshProjects();
           break;
         case 'refreshContracts':
+          console.log('refreshContracts message caught');
           this.refreshContracts();
           break;
         default:
@@ -69,6 +72,22 @@ export class WebsocketService {
     this.webSocket.onclose = (event) => {
       console.log('Close: ', event);
     };
+  }
+
+  public getCookie(name: string) {
+    let matches = document.cookie.match(
+      new RegExp(
+        '(?:^|; )' +
+          name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') +
+          '=([^;]*)'
+      )
+    );
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+  }
+
+  public getCookieSessionId() {
+    let cookie = this.getCookie('session');
+    return cookie;
   }
 
   public sendDeposit(model: DepositRequest) {
