@@ -2,56 +2,59 @@
   <button class="button is-link mb-5" (click)="showAddContractModal = true">
     Dodaj umowę
   </button>
-  <table class="table is-bordered is-striped is-hoverable is-fullwidth">
-    <thead>
-      <th>#</th>
-      <th>Nazwa</th>
-      <th>Wykonawca</th>
-      <th>Wynagrodzenie</th>
-      <th>Projekt</th>
-      <th>Kierownik</th>
-      <th>Data rozpoczęcia</th>
-      <th>Data zakończenia</th>
-      <th>Data utworzenia</th>
-      <th>Stan</th>
-      <th>Akcje</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let contract of contractsService.contracts; index as i">
-        <th>{{ i + 1 }}</th>
-        <td>{{ contract.name }}</td>
-        <td>{{ contract.contractor }}</td>
-        <td>{{ contract.payment | currency: "PLN":"symbol" }}</td>
-        <td>{{ contract.project }}</td>
-        <td>{{ contract.manager }}</td>
-        <td>{{ contract.startTime | date: "dd.MM.yyyy" }}</td>
-        <td>{{ contract.endTime | date: "dd.MM.yyyy" }}</td>
-        <td>{{ contract.creationTime | date: "dd.MM.yyyy" }}</td>
-        <th>
-          <button
-            *ngIf="!contract.commited"
-            (click)="payOff(contract._id)"
-            class="button is-link is-small"
-          >
-            Rozlicz
-          </button>
-          <p style="font-weight: normal" *ngIf="contract.commited">
-            Rozliczone
-          </p>
-        </th>
-        <th>
-          <button
-            (click)="
-              showDeleteContractModal = true; contractIdToDelete = contract._id
-            "
-            class="button is-link is-small"
-          >
-            Usuń
-          </button>
-        </th>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+      <thead>
+        <th>#</th>
+        <th>Nazwa</th>
+        <th>Wykonawca</th>
+        <th>Wynagrodzenie</th>
+        <th>Projekt</th>
+        <th>Kierownik</th>
+        <th>Data rozpoczęcia</th>
+        <th>Data zakończenia</th>
+        <th>Data utworzenia</th>
+        <th>Stan</th>
+        <th>Akcje</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let contract of contractsService.contracts; index as i">
+          <th>{{ i + 1 }}</th>
+          <td>{{ contract.name }}</td>
+          <td>{{ contract.contractor }}</td>
+          <td>{{ contract.payment | currency: "PLN":"symbol" }}</td>
+          <td>{{ contract.project }}</td>
+          <td>{{ contract.manager }}</td>
+          <td>{{ contract.startTime | date: "dd.MM.yyyy" }}</td>
+          <td>{{ contract.endTime | date: "dd.MM.yyyy" }}</td>
+          <td>{{ contract.creationTime | date: "dd.MM.yyyy" }}</td>
+          <th>
+            <button
+              *ngIf="!contract.commited"
+              (click)="payOff(contract._id)"
+              class="button is-link is-small"
+            >
+              Rozlicz
+            </button>
+            <p style="font-weight: normal" *ngIf="contract.commited">
+              Rozliczone
+            </p>
+          </th>
+          <th>
+            <button
+              (click)="
+                showDeleteContractModal = true;
+                contractIdToDelete = contract._id
+              "
+              class="button is-link is-small"
+            >
+              Usuń
+            </button>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <app-modal

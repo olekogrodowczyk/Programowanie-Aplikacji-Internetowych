@@ -12,59 +12,63 @@
     type="text"
     placeholder="Filtruj"
   />
-  <table class="table is-bordered is-hoverable is-size-6">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Imię</th>
-        <th>Nazwisko</th>
-        <th>Rok urodzenia</th>
-        <th>Transakcji</th>
-        <th>Stan konta</th>
-        <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">Akcje</th>
-        <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
-          Historia transakcji
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let person of personsService.persons; index as i">
-        <ng-container *ngIf="afterFiltered(person.firstName, person.lastName)">
-          <th>{{ i + 1 }}</th>
-          <td>{{ person.firstName }}</td>
-          <td>{{ person.lastName }}</td>
-          <td>{{ person.year }}</td>
-          <td>{{ person.transactions }}</td>
-          <td>{{ person.balance | currency: "PLN":"symbol" }}</td>
-          <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
-            <button
-              (click)="onEditClick(person)"
-              class="button is-link is-small"
-            >
-              Edytuj
-            </button>
-            <button
-              class="button is-link is-small table-button"
-              (click)="
-                showDeleteProjectModal = true; personIdToDelete = person._id
-              "
-            >
-              Usuń
-            </button>
-          </td>
+  <div class="table-container">
+    <table class="table is-bordered is-hoverable is-size-6">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Imię</th>
+          <th>Nazwisko</th>
+          <th>Rok urodzenia</th>
+          <th>Transakcji</th>
+          <th>Stan konta</th>
+          <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">Akcje</th>
+          <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+            Historia transakcji
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let person of personsService.persons; index as i">
+          <ng-container
+            *ngIf="afterFiltered(person.firstName, person.lastName)"
+          >
+            <th>{{ i + 1 }}</th>
+            <td>{{ person.firstName }}</td>
+            <td>{{ person.lastName }}</td>
+            <td>{{ person.year }}</td>
+            <td>{{ person.transactions }}</td>
+            <td>{{ person.balance | currency: "PLN":"symbol" }}</td>
+            <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+              <button
+                (click)="onEditClick(person)"
+                class="button is-link is-small"
+              >
+                Edytuj
+              </button>
+              <button
+                class="button is-link is-small table-button"
+                (click)="
+                  showDeleteProjectModal = true; personIdToDelete = person._id
+                "
+              >
+                Usuń
+              </button>
+            </td>
 
-          <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
-            <a
-              [routerLink]="['/transactions']"
-              [queryParams]="{ recipientId: person._id }"
-              class="button is-link is-small"
-              >Przejdź</a
-            >
-          </td>
-        </ng-container>
-      </tr>
-    </tbody>
-  </table>
+            <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+              <a
+                [routerLink]="['/transactions']"
+                [queryParams]="{ recipientId: person._id }"
+                class="button is-link is-small"
+                >Przejdź</a
+              >
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <app-modal
