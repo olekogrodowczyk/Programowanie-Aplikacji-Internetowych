@@ -37,6 +37,15 @@
           *ngIf="checkPermissions(['admin'])"
           [routerLinkActiveOptions]="{ exact: true }"
           routerLinkActive="is-active"
+          routerLink="/users"
+          class="navbar-item"
+        >
+          Użytkownicy
+        </a>
+        <a
+          *ngIf="checkPermissions(['admin'])"
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLinkActive="is-active"
           routerLink="/transactions"
           class="navbar-item"
         >
