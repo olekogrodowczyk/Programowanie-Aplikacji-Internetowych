@@ -28,30 +28,40 @@ const project = (module.exports = {
     }
 
     const sendAllProjects = async (q = "") => {
-      await db.projects.find({}).toArray(async function (err, projects) {
-        if (!err) {
-          let newArray = await Promise.all(
-            projects.map(async function (project) {
-              const manager = await db.users.findOne({
-                _id: project.manager,
-              });
-              const creator = await db.users.findOne({
-                _id: project.creator,
-              });
-              return {
-                _id: project._id,
-                name: project.name,
-                timeCreation: project.timeCreation,
-                creator: creator.firstName + " " + creator.lastName,
-                manager: manager.firstName + " " + manager.lastName,
-              };
-            })
-          );
-          lib.sendJson(env.res, newArray);
-        } else {
-          lib.sendError(env.res, 400, "persons.aggregate() failed " + err);
-        }
-      });
+      let forAdmin = false;
+      let currentUserId = "";
+      let project = {};
+      if (lib.sessions[env.session].roles.includes("admin")) {
+        forAdmin = true;
+      } else {
+        currentUserId = db.ObjectId(lib.sessions[env.session]._id);
+      }
+      await db.projects
+        .find(forAdmin ? {} : { manager: currentUserId })
+        .toArray(async function (err, projects) {
+          if (!err) {
+            let newArray = await Promise.all(
+              projects.map(async function (project) {
+                const manager = await db.users.findOne({
+                  _id: project.manager,
+                });
+                const creator = await db.users.findOne({
+                  _id: project.creator,
+                });
+                return {
+                  _id: project._id,
+                  name: project.name,
+                  timeCreation: project.timeCreation,
+                  creator: creator.firstName + " " + creator.lastName,
+                  manager: manager.firstName + " " + manager.lastName,
+                };
+              })
+            );
+            lib.sendJson(env.res, newArray);
+          } else {
+            lib.sendError(env.res, 400, "persons.aggregate() failed " + err);
+          }
+        });
     };
 
     switch (env.req.method) {

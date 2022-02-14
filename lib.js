@@ -72,16 +72,26 @@ const lib = (module.exports = {
   // sprawdzenie uprawnien
 
   permissions: [
-    { req: "POST /register$", roles: [], error: null },
-    { req: "^(POST|DELETE|GET|PUT) /auth", roles: [], error: null },
-    { req: "^Post /deposit$", roles: ["admin"], error: null },
-    { req: " ^(POST|PUT|DELETE|GET) /projects", roles: ["admin"], error: null },
-    { req: " ^(POST|PUT|DELETE|GET) /users", roles: ["admin"], error: null },
     {
-      req: " ^(POST|PUT|DELETE|GET) /contracts",
+      req: "^(POST|GET) /auth",
+      roles: [],
+      error: null,
+    },
+    {
+      req: "POST /register",
+      roles: [],
+      error: null,
+    },
+    { req: "^Post /deposit$", roles: ["admin"], error: null },
+    { req: "^GET /transaction$", roles: ["admin"], error: null },
+    {
+      req: " ^(POST|PUT|DELETE|GET) /contract",
       roles: ["manager"],
       error: null,
     },
+    { req: " ^(POST|PUT|DELETE|GET) /project", roles: ["admin"], error: null },
+    { req: " ^(POST|PUT|DELETE|GET) /user", roles: ["admin"], error: null },
+
     { req: "^(POST|PUT|DELETE) ", roles: ["admin"], error: null },
     {
       req: "^(POST|PUT|DELETE) ",
@@ -92,15 +102,16 @@ const lib = (module.exports = {
 
   checkPermissions: function (reqStr, roles) {
     console.log("'" + reqStr + "'");
+    console.log(roles);
     let permittedRoles = [];
-    for (let item of this.permissions) {
+    for (let item in this.permissions) {
       let regexp = new RegExp(item.req);
       if (regexp.test(reqStr)) {
-        permittedRoles = item.roles;
+        permittedRoles = lib.permissions[item].roles;
         break;
       }
     }
-
+    console.log(permittedRoles);
     // jeśli url ma pustą tablicę ról, jest niechroniony
     if (permittedRoles.length < 1) return true;
     if (!roles || roles.length < 1) return false;

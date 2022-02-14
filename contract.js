@@ -66,16 +66,28 @@ const contract = (module.exports = {
       };
     };
 
+    const getAllUserProjects = async (userId) => {
+      let projects = await db.projects
+        .find({ manager: userId })
+        .project({ _id: 1 })
+        .toArray();
+      return projects;
+    };
+
     const sendAllContracts = async (q = "") => {
-      let forManager = false;
-      let currentUserId = lib.sessions[env.session]._id;
-      if (lib.sessions[env.session].roles.includes("manager")) {
-        forManager = true;
+      let forAdmin = false;
+      let currentUserId = "";
+      let project = {};
+      if (lib.sessions[env.session].roles.includes("admin")) {
+        forAdmin = true;
+      } else {
+        currentUserId = db.ObjectId(lib.sessions[env.session]._id);
       }
-      console.log("ID:");
-      console.log(currentUserId);
+      let projects = (await getAllUserProjects(currentUserId)).map(
+        (x) => x._id
+      );
       await db.contracts
-        .find({ manager: currentUserId })
+        .find({ project: { $in: projects } })
         .toArray(async function (err, contracts) {
           if (!err) {
             let newArray = await Promise.all(

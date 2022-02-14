@@ -52,7 +52,7 @@
           Transakcje
         </a>
         <a
-          *ngIf="checkPermissions(['admin'])"
+          *ngIf="checkPermissions(['admin', 'manager'])"
           [routerLinkActiveOptions]="{ exact: true }"
           routerLinkActive="is-active"
           routerLink="/projects"
