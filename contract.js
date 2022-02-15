@@ -154,7 +154,6 @@ const contract = (module.exports = {
             { returnOriginal: false }
           );
           if (result) {
-            lib.webSocketRefreshContracts(env);
             lib.sendJson(env.res, "Contract edited successfully");
             let deposit = {
               recipient: contract.contractor,
@@ -162,6 +161,9 @@ const contract = (module.exports = {
               when: Date.now(),
             };
             await db.transactions.insertOne(deposit);
+            lib.webSocketRefreshContracts(env);
+            lib.webSocketRefreshPersons(env);
+            lib.webSocketRefreshTransactions(env);
           } else {
             lib.sendError(env.res, 400, "Error occurred in contract editing");
           }

@@ -15,7 +15,7 @@ const lib = (module.exports = {
     lib.broadcast({ type: "refreshPersons" }, function (client) {
       if (client.session == env.session) return false;
       let session = lib.sessions[client.session];
-      return session && session.roles.includes("user");
+      return session;
     });
   },
 
