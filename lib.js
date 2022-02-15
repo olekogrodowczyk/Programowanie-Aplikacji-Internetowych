@@ -76,7 +76,7 @@ const lib = (module.exports = {
 
   permissions: [
     {
-      req: "^(POST|GET) /auth",
+      req: "^(POST|GET|DELETE) /auth",
       roles: [],
       error: null,
     },
@@ -88,29 +88,31 @@ const lib = (module.exports = {
     { req: "^Post /deposit$", roles: ["admin"], error: null },
     { req: "^GET /transaction$", roles: ["admin"], error: null },
     {
-      req: " ^(POST|PUT|DELETE|GET) /contract",
-      roles: ["manager"],
+      req: "^(POST|PUT|DELETE|GET) /contract$",
+      roles: ["manager", "admin"],
       error: null,
     },
-    { req: " ^(POST|PUT|DELETE|GET) /project", roles: ["admin"], error: null },
-    { req: " ^(POST|PUT|DELETE|GET) /user", roles: ["admin"], error: null },
-
-    { req: "^(POST|PUT|DELETE) ", roles: ["admin"], error: null },
+    { req: "^(POST|PUT|DELETE|GET) /project$", roles: ["admin"], error: null },
+    { req: "^(POST|PUT|DELETE|GET) /user$", roles: ["admin"], error: null },
+    { req: "^GET /person$", roles: [], error: null },
+    { req: "^(POST|PUT|DELETE)", roles: ["admin"], error: null },
     {
-      req: "^(POST|PUT|DELETE) ",
-      roles: "*",
+      req: "^(GET|POST|PUT|DELETE)",
+      roles: [],
       error: "You have to be logged as admin",
     },
   ],
 
   checkPermissions: function (reqStr, roles) {
-    console.log("'" + reqStr + "'");
-    console.log(roles);
-    let permittedRoles = [];
-    for (let item in this.permissions) {
+    if (reqStr === "POST /auth" || reqStr === "DELETE /auth") {
+      return true;
+    }
+    for (let item of this.permissions) {
       let regexp = new RegExp(item.req);
+      console.log("'" + item.req + "'" + " test " + "'" + reqStr + "'");
+      console.log(regexp.test(reqStr));
       if (regexp.test(reqStr)) {
-        permittedRoles = lib.permissions[item].roles;
+        permittedRoles = item.roles;
         break;
       }
     }

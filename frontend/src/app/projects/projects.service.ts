@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SnackBarService } from '../shared/snack-bar.service';
 
 export interface AddProjectCredentials {
   name: string;

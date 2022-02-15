@@ -78,11 +78,11 @@ const contract = (module.exports = {
       let forAdmin = false;
       let currentUserId = "";
       let project = {};
-      if (lib.sessions[env.session].roles.includes("admin")) {
+      if (lib.sessions[env.session]?.roles?.includes("admin")) {
         forAdmin = true;
         console.log(forAdmin);
       } else {
-        currentUserId = db.ObjectId(lib.sessions[env.session]._id);
+        currentUserId = db.ObjectId(lib.sessions[env.session]?._id);
       }
       let projects = (await getAllUserProjects(currentUserId)).map(
         (x) => x._id

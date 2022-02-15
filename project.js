@@ -31,7 +31,7 @@ const project = (module.exports = {
       let forAdmin = false;
       let currentUserId = "";
       let project = {};
-      if (lib.sessions[env.session].roles.includes("admin")) {
+      if (lib.sessions[env.session]?.roles?.includes("admin")) {
         forAdmin = true;
       } else {
         currentUserId = db.ObjectId(lib.sessions[env.session]._id);

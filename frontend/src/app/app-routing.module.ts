@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth/auth.guard';
-import { TransactionsGuard } from './transactions/transactions.guard';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -15,7 +14,7 @@ const routes: Routes = [
   },
   {
     path: 'transactions',
-    canLoad: [AuthGuard, TransactionsGuard],
+    canLoad: [AuthGuard],
     loadChildren: () =>
       import('./transactions/transactions.module').then(
         (mod) => mod.TransactionsModule
