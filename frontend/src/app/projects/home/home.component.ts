@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import { UsersService } from 'src/app/users.service';
 import { WebsocketService } from 'src/app/websocket.service';
@@ -20,7 +21,8 @@ export class HomeComponent implements OnInit {
     private snackBar: SnackBarService,
     private usersService: UsersService,
     public projectsService: ProjectsService,
-    private webSocketService: WebsocketService
+    private webSocketService: WebsocketService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -33,8 +35,12 @@ export class HomeComponent implements OnInit {
       next: (value) => {
         this.projectsService.projects = value;
       },
-      error: () => {
-        console.log('Error caught!');
+      error: (response) => {
+        console.log(response);
+        if (response?.status == 403) {
+          this.snackBar.openSnackBar('Brak uprawnień!', 'OK');
+          this.router.navigateByUrl('/');
+        }
       },
     });
   }

@@ -1,6 +1,6 @@
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import { WebsocketService } from 'src/app/websocket.service';
@@ -23,7 +23,8 @@ export class HomeComponent implements OnInit {
     public transactionsService: TransactionsService,
     private snackBar: SnackBarService,
     private authService: AuthService,
-    private webSocketService: WebsocketService
+    private webSocketService: WebsocketService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -43,8 +44,12 @@ export class HomeComponent implements OnInit {
       next: (response) => {
         this.transactionsService.transactions = response;
       },
-      error: () => {
-        console.log('Unexpected error occurred');
+      error: (response) => {
+        console.log(response);
+        if (response?.status == 403) {
+          this.snackBar.openSnackBar('Brak uprawnień!', 'OK');
+          this.router.navigateByUrl('/');
+        }
       },
     });
   }
@@ -58,8 +63,12 @@ export class HomeComponent implements OnInit {
         next: (response) => {
           this.transactionsService.transactions = response;
         },
-        error: () => {
-          console.log('Unexpected error occurred');
+        error: (response) => {
+          console.log(response);
+          if (response?.status == 403) {
+            this.snackBar.openSnackBar('Brak uprawnień!', 'OK');
+            this.router.navigateByUrl('/');
+          }
         },
       });
   }

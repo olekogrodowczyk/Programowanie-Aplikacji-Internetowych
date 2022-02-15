@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import { WebsocketService } from 'src/app/websocket.service';
 import { User, UsersService } from '../users.service';
@@ -17,7 +18,8 @@ export class HomeComponent implements OnInit {
   constructor(
     public usersService: UsersService,
     private webSocketService: WebsocketService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -30,8 +32,12 @@ export class HomeComponent implements OnInit {
       next: (response) => {
         this.usersService.users = response;
       },
-      error: () => {
-        console.log('Error while getting users');
+      error: (response) => {
+        console.log(response);
+        if (response?.status == 403) {
+          this.snackBarService.openSnackBar('Brak uprawnień!', 'OK');
+          this.router.navigateByUrl('/');
+        }
       },
     });
   }

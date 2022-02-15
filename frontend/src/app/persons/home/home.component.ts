@@ -5,6 +5,7 @@ import { EditPersonComponent } from '../edit-person/edit-person.component';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { WebsocketService } from 'src/app/websocket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +24,8 @@ export class HomeComponent implements OnInit {
     public personsService: PersonsService,
     private snackBar: SnackBarService,
     private authService: AuthService,
-    private webSocketService: WebsocketService
+    private webSocketService: WebsocketService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -36,8 +38,12 @@ export class HomeComponent implements OnInit {
       next: (response) => {
         this.personsService.persons = response;
       },
-      error: () => {
-        console.log('Error caught!');
+      error: (response) => {
+        console.log(response);
+        if (response?.status == 403) {
+          this.snackBar.openSnackBar('Brak uprawnień!', 'OK');
+          this.router.navigateByUrl('/');
+        }
       },
     });
   }

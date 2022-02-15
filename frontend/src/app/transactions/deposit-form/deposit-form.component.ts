@@ -30,8 +30,11 @@ export class DepositFormComponent implements OnInit {
       next: (response) => {
         this.persons = response;
       },
-      error: () => {
-        console.log('Unexpected error occurred');
+      error: (response) => {
+        console.log(response);
+        if (response?.status == 403) {
+          this.snackBar.openSnackBar('Brak uprawnień!', 'OK');
+        }
       },
     });
   }

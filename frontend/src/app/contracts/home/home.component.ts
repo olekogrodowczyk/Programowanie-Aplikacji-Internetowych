@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import { WebsocketService } from 'src/app/websocket.service';
@@ -18,7 +19,8 @@ export class HomeComponent implements OnInit {
     private snackBar: SnackBarService,
     public contractsService: ContractsService,
     private webSocketService: WebsocketService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -31,11 +33,12 @@ export class HomeComponent implements OnInit {
       next: (value) => {
         this.contractsService.contracts = value;
       },
-      error: ({ cause }) => {
-        this.snackBar.openSnackBar(
-          'Wystąpił błąd podczas pobierania umów',
-          'OK'
-        );
+      error: (response) => {
+        console.log(response);
+        if (response?.status == 403) {
+          this.snackBar.openSnackBar('Brak uprawnień!', 'OK');
+          this.router.navigateByUrl('/');
+        }
       },
     });
   }
