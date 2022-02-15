@@ -1,3 +1,4 @@
+import { ThisReceiver } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { AuthService } from './auth/auth.service';
@@ -95,7 +96,9 @@ export class WebsocketService {
   }
 
   public closeWebSocket() {
-    this.webSocket.close();
+    if (this.webSocket) {
+      this.webSocket.close();
+    }
   }
 
   public refreshTransactions() {
