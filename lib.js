@@ -76,12 +76,12 @@ const lib = (module.exports = {
 
   permissions: [
     {
-      req: "^(POST|GET|DELETE) /auth",
+      req: "^(POST|GET|DELETE) /auth$",
       roles: [],
       error: null,
     },
     {
-      req: "POST /register",
+      req: "POST /register$",
       roles: [],
       error: null,
     },
@@ -92,7 +92,11 @@ const lib = (module.exports = {
       roles: ["manager", "admin"],
       error: null,
     },
-    { req: "^(POST|PUT|DELETE|GET) /project$", roles: ["admin"], error: null },
+    {
+      req: "^(POST|PUT|DELETE|GET) /project$",
+      roles: ["admin", "manager"],
+      error: null,
+    },
     { req: "^(POST|PUT|DELETE|GET) /user$", roles: ["admin"], error: null },
     { req: "^GET /person$", roles: [], error: null },
     { req: "^(POST|PUT|DELETE)", roles: ["admin"], error: null },
@@ -122,7 +126,7 @@ const lib = (module.exports = {
     if (!roles || roles.length < 1) return false;
 
     let intersection = [];
-    roles.forEach(function (role) {
+    roles?.forEach(function (role) {
       if (permittedRoles.includes(role)) intersection.push(role);
     });
     return intersection.length > 0;

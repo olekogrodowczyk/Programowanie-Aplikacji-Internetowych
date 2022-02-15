@@ -38,6 +38,7 @@
             <td>{{ getUserMaxRole(user) }}</td>
             <td>
               <button
+                [disabled]="getUserMaxRole(user) === 'Admin'"
                 (click)="showDeleteUserModal = true; userIdToDelete = user._id"
                 class="button is-link is-small"
               >
@@ -46,7 +47,7 @@
             </td>
             <td>
               <button
-                *ngIf="getUserMaxRole(user) === 'Użytkownik'"
+                [disabled]="!(getUserMaxRole(user) === 'Użytkownik')"
                 (click)="
                   showPromoteUserModal = true; userIdToPromote = user._id
                 "
