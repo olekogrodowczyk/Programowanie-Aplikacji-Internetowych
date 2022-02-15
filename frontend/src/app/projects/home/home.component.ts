@@ -26,8 +26,8 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getProjects();
     this.webSocketService.openWebSocket();
+    this.getProjects();
   }
 
   getProjects() {
@@ -86,6 +86,7 @@ export class HomeComponent implements OnInit {
         );
       },
     });
+    this.getProjects();
     this.ngOnInit();
     this.showDeleteProjectModal = false;
   }

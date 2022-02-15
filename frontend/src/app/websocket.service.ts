@@ -10,6 +10,7 @@ import {
   TransactionResponse,
   TransactionsService,
 } from './transactions/transactions.service';
+import { UsersService } from './users/users.service';
 
 export enum TypeOfRefresh {
   Persons = 1,
@@ -29,7 +30,8 @@ export class WebsocketService {
     private transationsService: TransactionsService,
     private projectsService: ProjectsService,
     private contractsService: ContractsService,
-    private personsService: PersonsService
+    private personsService: PersonsService,
+    private usersService: UsersService
   ) {}
 
   public openWebSocket() {
@@ -63,6 +65,10 @@ export class WebsocketService {
         case 'refreshContracts':
           console.log('refreshContracts message caught');
           this.refreshContracts();
+          break;
+        case 'refreshUsers':
+          console.log('refreshUsers message caught');
+          this.refreshUsers();
           break;
         default:
           console.log('Unrecognized web socket message');
@@ -144,6 +150,19 @@ export class WebsocketService {
     this.contractsService.getContracts().subscribe({
       next: (response) => {
         this.contractsService.contracts = response;
+      },
+      error: () => {
+        console.log(
+          'An unexptected error has occured while refreshing contracts by web socket'
+        );
+      },
+    });
+  }
+
+  public refreshUsers() {
+    this.usersService.getUsers().subscribe({
+      next: (response) => {
+        this.usersService.users = response;
       },
       error: () => {
         console.log(

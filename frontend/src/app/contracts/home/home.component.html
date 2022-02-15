@@ -34,16 +34,12 @@
           <td>{{ contract.creationTime | date: "dd.MM.yyyy" }}</td>
           <th>
             <button
-              *ngIf="!contract.commited"
               (click)="payOff(contract._id)"
               class="button is-link is-small"
-              [disabled]="!checkPermission(['manager'])"
+              [disabled]="contract.commited"
             >
-              Rozlicz
+              {{ !contract.commited ? "Rozlicz" : "Rozliczone" }}
             </button>
-            <p style="font-weight: normal" *ngIf="contract.commited">
-              Rozliczone
-            </p>
           </th>
           <th>
             <button

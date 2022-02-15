@@ -23,7 +23,7 @@ const lib = (module.exports = {
     lib.broadcast({ type: "refreshTransactions" }, function (client) {
       if (client.session == env.session) return false;
       let session = lib.sessions[client.session];
-      return session && session.roles.includes("admin");
+      return session && session.roles && session.roles.includes("admin");
     });
   },
 
@@ -33,6 +33,7 @@ const lib = (module.exports = {
       let session = lib.sessions[client.session];
       return (
         session &&
+        session.roles &&
         (session.roles.includes("admin") || session.roles.includes("manager"))
       );
     });
@@ -42,7 +43,11 @@ const lib = (module.exports = {
     lib.broadcast({ type: "refreshContracts" }, function (client) {
       if (client.session == env.session) return false;
       let session = lib.sessions[client.session];
-      return session && session.roles.includes("manager");
+      return (
+        session &&
+        session.roles &&
+        (session.roles.includes("manager") || session.roles.includes("admin"))
+      );
     });
   },
 
@@ -50,7 +55,7 @@ const lib = (module.exports = {
     lib.broadcast({ type: "refreshUsers" }, function (client) {
       if (client.session == env.session) return false;
       let session = lib.sessions[client.session];
-      return session && session.roles.includes("admin");
+      return session && session.roles && session.roles.includes("admin");
     });
   },
 
@@ -99,6 +104,7 @@ const lib = (module.exports = {
     },
     { req: "^(POST|PUT|DELETE|GET) /user$", roles: ["admin"], error: null },
     { req: "^GET /person$", roles: [], error: null },
+    { req: "^(POST|PUT|DELETE) /person$", roles: ["admin"], error: null },
     { req: "^(POST|PUT|DELETE)", roles: ["admin"], error: null },
     {
       req: "^(GET|POST|PUT|DELETE)",
@@ -113,14 +119,12 @@ const lib = (module.exports = {
     }
     for (let item of this.permissions) {
       let regexp = new RegExp(item.req);
-      console.log("'" + item.req + "'" + " test " + "'" + reqStr + "'");
-      console.log(regexp.test(reqStr));
+
       if (regexp.test(reqStr)) {
         permittedRoles = item.roles;
         break;
       }
     }
-    console.log(permittedRoles);
     // jeśli url ma pustą tablicę ról, jest niechroniony
     if (permittedRoles.length < 1) return true;
     if (!roles || roles.length < 1) return false;
@@ -133,6 +137,9 @@ const lib = (module.exports = {
   },
   checkPermission: function (roles, rolesToCheck) {
     let exists = false;
+    if (!roles || !rolesToCheck) {
+      return false;
+    }
     roles.forEach((item) => {
       if (rolesToCheck.includes(item)) {
         exists = true;

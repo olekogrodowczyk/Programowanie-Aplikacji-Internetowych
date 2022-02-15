@@ -29,15 +29,18 @@ export class AddProjectFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.usersService.getUsersByRole('manager').subscribe({
-      next: (value) => {
-        this.managers = value;
-        console.log(this.managers);
-      },
-      error: () => {
-        console.log('Error caught!');
-      },
-    });
+    let roles = this.authService.checkPermission(['admin']);
+    if (roles) {
+      this.usersService.getUsersByRole('manager').subscribe({
+        next: (value) => {
+          this.managers = value;
+          console.log(this.managers);
+        },
+        error: () => {
+          console.log('Error caught!');
+        },
+      });
+    }
   }
 
   checkPermission(roles: string[]): boolean {

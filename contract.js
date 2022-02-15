@@ -147,6 +147,13 @@ const contract = (module.exports = {
         contractId = db.ObjectId(env.urlParsed.query.contractId);
         if (contractId) {
           let contract = await db.contracts.findOne({ _id: contractId });
+          if (
+            lib.checkPermission(lib.sessions[env.session].roles, ["manager"]) &&
+            contract.creator === db.ObjectId(lib.sessions[env.session]._id)
+          ) {
+            lib.sendError(env.res, 403, "You have to be either admin or owner");
+            return;
+          }
           contract.commited = true;
           var result = await db.contracts.findOneAndUpdate(
             { _id: contractId },
@@ -178,9 +185,19 @@ const contract = (module.exports = {
       case "DELETE":
         _id = db.ObjectId(env.urlParsed.query._id);
         if (_id) {
+          let contract = await db.contracts.findOne({ _id: _id });
+          if (
+            lib.checkPermission(
+              !(lib.sessions[env.session]?.roles, ["admin"])
+            ) &&
+            contract.creator !== db.ObjectId(lib.permissions[env.session]._id)
+          ) {
+            lib.sendError(env.res, 403, "You have to be either admin or owner");
+          }
           db.contracts.findOneAndDelete({ _id }, async function (err, result) {
             if (!err) {
               lib.webSocketRefreshContracts(env);
+              lib.sendJson(env.res, "Contract deleted successfully");
             } else {
               lib.sendError(env.res, 400, "projects.findOneAndDelete() failed");
             }

@@ -33,9 +33,7 @@ export class HomeComponent implements OnInit {
     if (this.recipientId) {
       this.getTransactionByRecipientId();
     } else {
-      if (!this.transactionsService.transactions) {
-        this.getAllTransactions();
-      }
+      this.getAllTransactions();
     }
   }
 

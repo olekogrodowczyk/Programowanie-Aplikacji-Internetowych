@@ -40,6 +40,7 @@ const register = (module.exports = {
       case "POST":
         db.users.insertOne(user, function (err, result) {
           if (!err) {
+            lib.webSocketRefreshUsers(env);
             lib.sendJson(env.res, result._id);
           } else {
             lib.sendError(env.res, 400, "persons.insertOne() failed");

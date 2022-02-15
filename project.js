@@ -87,6 +87,15 @@ const project = (module.exports = {
         _id = db.ObjectId(env.payload._id);
         if (_id) {
           let project = await db.projects.findOne({ _id: _id });
+          if (
+            lib.checkPermission(
+              !(lib.sessions[env.session].roles, ["admin"])
+            ) &&
+            project.creator !== db.ObjectId(lib.permissions[env.session]._id)
+          ) {
+            lib.sendError(env.res, 403, "You have to be either admin or owner");
+            return;
+          }
           project.name = env.payload.name;
           project.manager = db.ObjectId(env.payload.managerId);
           var result = await db.projects.findOneAndUpdate(
@@ -97,7 +106,7 @@ const project = (module.exports = {
           if (result) {
             lib.webSocketRefreshContracts(env);
             lib.webSocketRefreshProjects(env);
-            lib.sendJson(env.res, "Project edited successfully");
+            lib.sendJson(env.res, "Contract edited successfully");
           } else {
             lib.sendError(env.res, 400, "Error occurred in project editing");
           }
@@ -112,11 +121,20 @@ const project = (module.exports = {
       case "DELETE":
         _id = db.ObjectId(env.urlParsed.query._id);
         if (_id) {
+          if (
+            lib.checkPermission(
+              !(lib.sessions[env.session]?.roles, ["admin"])
+            ) &&
+            project.creator !== db.ObjectId(lib.permissions[env.session]._id)
+          ) {
+            lib.sendError(env.res, 403, "You have to be either admin or owner");
+          }
           db.projects.findOneAndDelete({ _id }, async function (err, result) {
             if (!err) {
               lib.webSocketRefreshContracts(env);
               lib.webSocketRefreshProjects(env);
               await db.contracts.deleteMany({ project: _id });
+              lib.sendJson(env.res, "Contract edited successfully");
             } else {
               lib.sendError(env.res, 400, "projects.findOneAndDelete() failed");
             }

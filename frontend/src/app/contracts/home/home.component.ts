@@ -24,8 +24,8 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getContracts();
     this.webSocketService.openWebSocket();
+    this.getContracts();
   }
 
   getContracts() {
@@ -56,6 +56,7 @@ export class HomeComponent implements OnInit {
         );
       },
     });
+    this.getContracts();
     this.ngOnInit();
   }
 
@@ -70,6 +71,7 @@ export class HomeComponent implements OnInit {
     } else {
       notificationMessage = 'Podano błędne dane';
     }
+    this.getContracts();
     this.showAddContractModal = false;
     this.snackBar.openSnackBar(notificationMessage, 'Ok');
     this.ngOnInit();
@@ -84,6 +86,7 @@ export class HomeComponent implements OnInit {
         this.snackBar.openSnackBar('Nie udało się usunąć umowy', 'OK');
       },
     });
+    this.getContracts();
     this.showDeleteContractModal = false;
     this.ngOnInit();
   }

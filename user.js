@@ -40,8 +40,16 @@ const user = (module.exports = {
       case "DELETE":
         _id = db.ObjectId(env.urlParsed.query._id);
         if (_id) {
+          let userToDelete = await db.users.findOne({
+            _id: _id,
+          });
+          if (lib.checkPermission(userToDelete.roles, ["admin"])) {
+            lib.sendError(env.res, 403, "You cannot delete an admin");
+            return;
+          }
           db.users.findOneAndDelete({ _id }, async function (err, result) {
             if (!err) {
+              console.log(result);
               lib.webSocketRefreshContracts(env);
               lib.webSocketRefreshProjects(env);
               lib.webSocketRefreshUsers(env);
