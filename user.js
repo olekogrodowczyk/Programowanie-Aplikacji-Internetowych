@@ -5,8 +5,9 @@ const user = (module.exports = {
   handle: async function (env) {
     switch (env.req.method) {
       case "GET":
+        role = env.urlParsed.query.role;
         const users = await db.users
-          .find({})
+          .find(role ? { roles: role } : {})
           .project({ id: 1, login: 1, firstName: 1, lastName: 1, roles: 1 })
           .toArray();
         if (users) {

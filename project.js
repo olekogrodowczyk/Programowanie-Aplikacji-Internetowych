@@ -108,8 +108,6 @@ const project = (module.exports = {
             "broken _id for update " + env.urlParsed.query._id
           );
         }
-        lib.webSocketRefreshContracts(env);
-        lib.webSocketRefreshProjects(env);
         break;
       case "DELETE":
         _id = db.ObjectId(env.urlParsed.query._id);

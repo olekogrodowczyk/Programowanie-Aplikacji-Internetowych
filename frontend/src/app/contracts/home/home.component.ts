@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/auth/auth.service';
 import { SnackBarService } from 'src/app/shared/snack-bar.service';
 import { WebsocketService } from 'src/app/websocket.service';
 import { ContractsService, Contract } from '../contracts.service';
@@ -16,7 +17,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private snackBar: SnackBarService,
     public contractsService: ContractsService,
-    private webSocketService: WebsocketService
+    private webSocketService: WebsocketService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +54,10 @@ export class HomeComponent implements OnInit {
       },
     });
     this.ngOnInit();
+  }
+
+  checkPermission(roles: string[]): boolean {
+    return this.authService.checkPermission(roles);
   }
 
   onAddContractSubmit(value: boolean) {

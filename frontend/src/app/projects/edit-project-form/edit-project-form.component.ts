@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/auth/auth.service';
 import { User, UsersService } from 'src/app/users.service';
 import {
   ProjectsService,
@@ -21,7 +22,8 @@ export class EditProjectFormComponent implements OnInit {
 
   constructor(
     private projectsService: ProjectsService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -31,7 +33,7 @@ export class EditProjectFormComponent implements OnInit {
         Validators.minLength(2),
         Validators.maxLength(20),
       ]),
-      manager: new FormControl('', [Validators.required]),
+      manager: new FormControl(''),
     });
 
     this.usersService.getUsersByRole('manager').subscribe({
@@ -45,12 +47,17 @@ export class EditProjectFormComponent implements OnInit {
     });
   }
 
+  checkPermission(roles: string[]): boolean {
+    return this.authService.checkPermission(roles);
+  }
+
   onSubmit() {
     if (this.editProjectForm.invalid) {
       return;
     }
-    const managerId: string =
-      this.editProjectForm.controls['manager'].value._id;
+    const managerId: string = this.checkPermission(['admin'])
+      ? this.editProjectForm.controls['manager'].value._id
+      : this.authService._id$.getValue();
     const name = this.editProjectForm.controls['name'].value;
     const project: EditProjectCredentials = {
       managerId: managerId,

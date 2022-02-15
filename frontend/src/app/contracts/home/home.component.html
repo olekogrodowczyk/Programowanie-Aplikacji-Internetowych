@@ -1,5 +1,9 @@
 <div class="box">
-  <button class="button is-link mb-5" (click)="showAddContractModal = true">
+  <button
+    *ngIf="checkPermission(['manager'])"
+    class="button is-link mb-5"
+    (click)="showAddContractModal = true"
+  >
     Dodaj umowę
   </button>
   <div class="table-container">

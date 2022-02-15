@@ -20,14 +20,10 @@
           <th>Imię</th>
           <th>Nazwisko</th>
           <th>Rok urodzenia</th>
-          <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
-            Transakcji
-          </th>
-          <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
-            Stan konta
-          </th>
-          <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">Akcje</th>
-          <th *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+          <th *ngIf="CheckAddPersonPermission(['admin'])">Transakcji</th>
+          <th *ngIf="CheckAddPersonPermission(['admin'])">Stan konta</th>
+          <th *ngIf="CheckAddPersonPermission(['admin'])">Akcje</th>
+          <th *ngIf="CheckAddPersonPermission(['admin'])">
             Historia transakcji
           </th>
         </tr>
@@ -41,13 +37,13 @@
             <td>{{ person.firstName }}</td>
             <td>{{ person.lastName }}</td>
             <td>{{ person.year }}</td>
-            <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+            <td *ngIf="CheckAddPersonPermission(['admin'])">
               {{ person.transactions }}
             </td>
-            <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+            <td *ngIf="CheckAddPersonPermission(['admin'])">
               {{ person.balance | currency: "PLN":"symbol" }}
             </td>
-            <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+            <td *ngIf="CheckAddPersonPermission(['admin'])">
               <button
                 (click)="onEditClick(person)"
                 class="button is-link is-small"
@@ -64,7 +60,7 @@
               </button>
             </td>
 
-            <td *ngIf="CheckAddPersonPermission(['admin', 'manager'])">
+            <td *ngIf="CheckAddPersonPermission(['admin'])">
               <a
                 [routerLink]="['/transactions']"
                 [queryParams]="{ recipientId: person._id }"

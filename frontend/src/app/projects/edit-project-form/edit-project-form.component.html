@@ -16,7 +16,7 @@
       </span>
     </p>
   </div>
-  <div class="field">
+  <div *ngIf="checkPermission(['admin'])" class="field">
     <div class="select is-fullwidth">
       <select formControlName="manager">
         <option value="" disabled selected hidden>Wybierz kierownika</option>

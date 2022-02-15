@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit {
     } else {
       notificationMessage = 'Podano błędne dane';
     }
-    this.showAddProjectModal = false;
+    this.showEditProjectModal = false;
     this.snackBar.openSnackBar(notificationMessage, 'Ok');
     this.ngOnInit();
   }

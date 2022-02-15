@@ -19,6 +19,7 @@ interface SigninResponse {
   roles: string[];
   firstName: string;
   lastName: string;
+  _id: string;
 }
 
 interface CheckAuthResponse {
@@ -27,6 +28,7 @@ interface CheckAuthResponse {
   login: string;
   firstName: string;
   lastName: string;
+  _id: string;
 }
 
 @Injectable({
@@ -35,6 +37,7 @@ interface CheckAuthResponse {
 export class AuthService {
   roles$ = new BehaviorSubject<string[]>([]);
   username$ = new BehaviorSubject<string>('');
+  _id$ = new BehaviorSubject<string>('');
   rootUrl = 'http://localhost:7777';
 
   signedin$ = new BehaviorSubject(false);
@@ -52,6 +55,7 @@ export class AuthService {
           this.signedin$.next(true);
           this.username$.next(response.firstName + ' ' + response.lastName);
           this.roles$.next(response.roles);
+          this._id$.next(response._id);
         })
       );
   }
@@ -84,6 +88,7 @@ export class AuthService {
         this.username$.next(
           (response.firstName + ' ' + response.lastName).trim()
         );
+        this._id$.next(response._id);
       })
     );
   }

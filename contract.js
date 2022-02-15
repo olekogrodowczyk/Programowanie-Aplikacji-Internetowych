@@ -80,6 +80,7 @@ const contract = (module.exports = {
       let project = {};
       if (lib.sessions[env.session].roles.includes("admin")) {
         forAdmin = true;
+        console.log(forAdmin);
       } else {
         currentUserId = db.ObjectId(lib.sessions[env.session]._id);
       }
@@ -87,7 +88,7 @@ const contract = (module.exports = {
         (x) => x._id
       );
       await db.contracts
-        .find({ project: { $in: projects } })
+        .find(forAdmin ? {} : { project: { $in: projects } })
         .toArray(async function (err, contracts) {
           if (!err) {
             let newArray = await Promise.all(

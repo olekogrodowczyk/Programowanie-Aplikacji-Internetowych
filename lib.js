@@ -31,7 +31,10 @@ const lib = (module.exports = {
     lib.broadcast({ type: "refreshProjects" }, function (client) {
       if (client.session == env.session) return false;
       let session = lib.sessions[client.session];
-      return session && session.roles.includes("admin");
+      return (
+        session &&
+        (session.roles.includes("admin") || session.roles.includes("manager"))
+      );
     });
   },
 

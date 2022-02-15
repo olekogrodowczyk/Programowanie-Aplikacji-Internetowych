@@ -61,7 +61,7 @@
           Projekty
         </a>
         <a
-          *ngIf="checkPermissions(['manager'])"
+          *ngIf="checkPermissions(['manager', 'admin'])"
           [routerLinkActiveOptions]="{ exact: true }"
           routerLinkActive="is-active"
           routerLink="/contracts"
