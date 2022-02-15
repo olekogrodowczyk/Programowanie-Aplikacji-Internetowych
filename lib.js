@@ -125,4 +125,13 @@ const lib = (module.exports = {
     });
     return intersection.length > 0;
   },
+  checkPermission: function (roles, rolesToCheck) {
+    let exists = false;
+    roles.forEach((item) => {
+      if (rolesToCheck.includes(item)) {
+        exists = true;
+      }
+    });
+    return exists;
+  },
 });

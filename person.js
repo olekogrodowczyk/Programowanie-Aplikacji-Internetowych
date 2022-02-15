@@ -27,6 +27,10 @@ const person = module.exports = {
                 { $addFields: { balance: {$sum: '$transactions.amount'}, transactions: {$size: '$transactions'}}}
             ]).toArray(function(err, persons) {
                 if(!err) {
+                    let isAdmin = lib.checkPermission(lib.sessions[env.session].roles,["admin"]);
+                    if(!isAdmin){
+                         persons = persons.map(({balance, transactions, ...Attrs})=>Attrs);
+                    }
                     lib.sendJson(env.res, persons)
                 } else {
                     lib.sendError(env.res, 400, 'persons.aggregate() failed ' + err)
