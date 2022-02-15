@@ -37,6 +37,7 @@
               *ngIf="!contract.commited"
               (click)="payOff(contract._id)"
               class="button is-link is-small"
+              [disabled]="!checkPermission(['manager'])"
             >
               Rozlicz
             </button>
