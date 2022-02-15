@@ -1,4 +1,4 @@
-<form [formGroup]="depositForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="depositForm" #form="ngForm" (ngSubmit)="onSubmit()">
   <div class="field">
     <div class="select is-multiple is-size-6 is-fullwidth">
       <select multiple size="12" formControlName="recipient">
@@ -17,4 +17,7 @@
     />
     <button class="button is-link ml-5">Wpłać</button>
   </div>
+  <p class="has-text-danger" *ngIf="depositForm.invalid && form.submitted">
+    Proszę prawidłowo wypełnić formularz
+  </p>
 </form>

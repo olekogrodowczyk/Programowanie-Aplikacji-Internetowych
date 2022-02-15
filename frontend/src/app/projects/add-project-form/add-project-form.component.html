@@ -1,4 +1,9 @@
-<form [formGroup]="addProjectForm" (ngSubmit)="onSubmit()" id="addProjectForm">
+<form
+  [formGroup]="addProjectForm"
+  #form="ngForm"
+  (ngSubmit)="onSubmit()"
+  id="addProjectForm"
+>
   <div class="field">
     <p class="control has-icons-left has-icons-right">
       <input
@@ -14,7 +19,7 @@
   </div>
   <div *ngIf="checkPermission(['admin'])" class="field">
     <div class="select is-fullwidth">
-      <select formControlName="manager">
+      <select formControlName="manager" [required]="checkPermission(['admin'])">
         <option value="" disabled selected hidden>Wybierz kierownika</option>
         <option *ngFor="let manager of managers" [ngValue]="manager">
           {{ manager.firstName }} {{ manager.lastName }}
@@ -22,4 +27,7 @@
       </select>
     </div>
   </div>
+  <p class="has-text-danger" *ngIf="addProjectForm.invalid && form.submitted">
+    Proszę prawidłowo wypełnić formularz
+  </p>
 </form>

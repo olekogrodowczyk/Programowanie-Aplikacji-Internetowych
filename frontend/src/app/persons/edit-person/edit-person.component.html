@@ -1,4 +1,9 @@
-<form [formGroup]="editPersonForm" (ngSubmit)="onSubmit()" id="editPersonForm">
+<form
+  [formGroup]="editPersonForm"
+  (ngSubmit)="onSubmit()"
+  #form="ngForm"
+  id="editPersonForm"
+>
   <div class="field">
     <p class="control has-icons-left has-icons-right">
       <input
@@ -38,4 +43,7 @@
       </span>
     </p>
   </div>
+  <p class="has-text-danger" *ngIf="editPersonForm.invalid && form.submitted">
+    Proszę prawidłowo wypełnić formularz
+  </p>
 </form>

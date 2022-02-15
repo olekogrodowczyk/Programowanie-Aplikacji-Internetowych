@@ -1,4 +1,9 @@
-<form [formGroup]="registerGroupForm" (ngSubmit)="onSubmit()" id="registerForm">
+<form
+  [formGroup]="registerGroupForm"
+  #form="ngForm"
+  (ngSubmit)="onSubmit()"
+  id="registerForm"
+>
   <div class="field">
     <p class="control has-icons-left has-icons-right">
       <input
@@ -64,4 +69,10 @@
       </span>
     </p>
   </div>
+  <p
+    class="has-text-danger"
+    *ngIf="registerGroupForm.invalid && form.submitted"
+  >
+    Proszę prawidłowo wypełnić formularz
+  </p>
 </form>

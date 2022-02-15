@@ -2,6 +2,7 @@
   [formGroup]="addContractForm"
   (ngSubmit)="onSubmit()"
   id="addContractForm"
+  #form="ngForm"
 >
   <div class="field">
     <p class="control has-icons-left has-icons-right">
@@ -87,4 +88,7 @@
       </span>
     </p>
   </div>
+  <p class="has-text-danger" *ngIf="addContractForm.invalid && form.submitted">
+    Proszę prawidłowo wypełnić formularz
+  </p>
 </form>
