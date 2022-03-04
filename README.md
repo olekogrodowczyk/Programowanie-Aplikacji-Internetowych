@@ -5,3 +5,4 @@ Technologies used:
 - Angular Material
 - Bulma
 - Node.js
+- MongoDB
